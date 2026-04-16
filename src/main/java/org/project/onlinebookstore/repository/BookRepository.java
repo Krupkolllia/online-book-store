@@ -1,4 +1,10 @@
 package org.project.onlinebookstore.repository;
 
-public class BookRepository {
+import java.util.List;
+import org.project.onlinebookstore.model.Book;
+
+public interface BookRepository {
+    Book save(Book book);
+
+    List<Book> findAll();
 }
