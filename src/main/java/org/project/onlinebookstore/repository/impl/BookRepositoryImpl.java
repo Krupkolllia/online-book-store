@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.project.onlinebookstore.exception.DataProcessingException;
 import org.project.onlinebookstore.model.Book;
 import org.project.onlinebookstore.repository.BookRepository;
 import org.springframework.stereotype.Repository;
@@ -31,7 +32,7 @@ public class BookRepositoryImpl implements BookRepository {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException("Cannot insert a book: " + book, e);
+            throw new DataProcessingException("Cannot insert a book: " + book, e);
         } finally {
             if (session != null) {
                 session.close();
@@ -45,7 +46,7 @@ public class BookRepositoryImpl implements BookRepository {
             return session.createQuery("SELECT b From Book b", Book.class)
                     .getResultList();
         } catch (Exception e) {
-            throw new RuntimeException("Cannot get all books", e);
+            throw new DataProcessingException("Cannot get all books", e);
         }
     }
 }
