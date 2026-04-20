@@ -1,3 +1,5 @@
+package org.project.onlinebookstore.dto;
+
 import java.math.BigDecimal;
 
 public record BookDto(Long id,
