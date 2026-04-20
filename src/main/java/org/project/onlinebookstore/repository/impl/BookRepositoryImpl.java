@@ -1,6 +1,7 @@
 package org.project.onlinebookstore.repository.impl;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -41,9 +42,21 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
+    public Optional<Book> findById(Long id) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("SELECT b FROM Book b WHERE b.id = :id", Book.class)
+                    .setParameter("id", id)
+                    .uniqueResultOptional();
+
+        } catch (Exception e) {
+            throw new DataProcessingException("Cannot find a book by id: " + id, e);
+        }
+    }
+
+    @Override
     public List<Book> findAll() {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("SELECT b From Book b", Book.class)
+            return session.createQuery("SELECT b FROM Book b", Book.class)
                     .getResultList();
         } catch (Exception e) {
             throw new DataProcessingException("Cannot get all books", e);
