@@ -2,18 +2,20 @@ package org.project.onlinebookstore.controller;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.project.onlinebookstore.dto.BookDto;
-import org.project.onlinebookstore.dto.CreateBookRequestDto;
+import org.project.onlinebookstore.dto.book.BookDto;
+import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
+import org.project.onlinebookstore.dto.book.UpdateBookRequestDto;
 import org.project.onlinebookstore.service.BookService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/books")
+@RequestMapping(value = "/api/books")
 @RequiredArgsConstructor
 public class BookController {
 
@@ -24,7 +26,7 @@ public class BookController {
         return bookService.findAll();
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public BookDto getBookById(@PathVariable Long id) {
         return bookService.findById(id);
     }
@@ -32,5 +34,11 @@ public class BookController {
     @PostMapping
     public BookDto createBook(@RequestBody CreateBookRequestDto bookRequestDto) {
         return bookService.save(bookRequestDto);
+    }
+
+    @PutMapping("/{id}")
+    public BookDto updateBook(@PathVariable Long id,
+                              @RequestBody UpdateBookRequestDto bookRequestDto) {
+        return bookService.update(id, bookRequestDto);
     }
 }
