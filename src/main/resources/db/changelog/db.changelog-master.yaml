@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changes/001-create-books-table.yaml
   - include:
       file: db/changelog/changes/002-add-isdeleted-column-to-books-table.yaml
+  - include:
+      file: db/changelog/changes/003-fix-isdeleted-column-type-from-boolean-to-tinyint.yaml

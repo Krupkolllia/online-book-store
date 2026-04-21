@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-fix-isdeleted-column-type-from-boolean-to-tinyint
+      author: Krupko Illia
+      changes:
+        - modifyDataType:
+            tableName: books
+            columnName: is_deleted
+            newDataType: TINYINT(1)
