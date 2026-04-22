@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 004-fix-isbn-column-type-from-varchar13-to-varchar14
-      author: Krupko Illia
-      changes:
-        - modifyDataType:
-            tableName: books
-            columnName: isbn
-            newDataType: VARCHAR(14)

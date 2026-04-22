@@ -36,7 +36,13 @@ databaseChangeLog:
                   type: TEXT
               - column:
                   name: isbn
-                  type: VARCHAR(13)
+                  type: VARCHAR(14)
                   constraints:
                     nullable: false
                     unique: true
+              - column:
+                  name: is_deleted
+                  type: TINYINT(1)
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
