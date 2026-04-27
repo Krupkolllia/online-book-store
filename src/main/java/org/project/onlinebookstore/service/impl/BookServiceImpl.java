@@ -2,8 +2,9 @@ package org.project.onlinebookstore.service.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.project.onlinebookstore.dto.BookDto;
-import org.project.onlinebookstore.dto.CreateBookRequestDto;
+import org.project.onlinebookstore.dto.book.BookDto;
+import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
+import org.project.onlinebookstore.dto.book.UpdateBookRequestDto;
 import org.project.onlinebookstore.dto.mapper.BookMapper;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.model.Book;
@@ -39,4 +40,22 @@ public class BookServiceImpl implements BookService {
                 .map(bookMapper::toDto)
                 .toList();
     }
+
+    @Override
+    public BookDto update(Long id, UpdateBookRequestDto bookRequestDto) {
+        Book book = bookRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Cannot find a book by id: " + id)
+        );
+        bookMapper.updateFromDto(book, bookRequestDto);
+        return bookMapper.toDto(bookRepository.save(book));
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        if (!bookRepository.existsById(id)) {
+            throw new EntityNotFoundException("Cannot find a book by id: " + id);
+        }
+        bookRepository.deleteById(id);
+    }
+
 }
