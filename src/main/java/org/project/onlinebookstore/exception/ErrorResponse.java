@@ -1,4 +1,4 @@
-package org.project.onlinebookstore.dto;
+package org.project.onlinebookstore.exception;
 
 import java.time.LocalDateTime;
 import java.util.Map;

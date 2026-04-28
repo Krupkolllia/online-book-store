@@ -5,7 +5,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.book.BookDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
-import org.project.onlinebookstore.dto.book.UpdateBookRequestDto;
 import org.project.onlinebookstore.service.BookService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +39,7 @@ public class BookController {
 
     @PutMapping("/{id}")
     public BookDto updateBookById(@PathVariable Long id,
-                              @RequestBody @Valid UpdateBookRequestDto bookRequestDto) {
+                              @RequestBody @Valid CreateBookRequestDto bookRequestDto) {
         return bookService.update(id, bookRequestDto);
     }
 

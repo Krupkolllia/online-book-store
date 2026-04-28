@@ -3,7 +3,6 @@ package org.project.onlinebookstore.service;
 import java.util.List;
 import org.project.onlinebookstore.dto.book.BookDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
-import org.project.onlinebookstore.dto.book.UpdateBookRequestDto;
 
 public interface BookService {
     BookDto save(CreateBookRequestDto book);
@@ -12,7 +11,7 @@ public interface BookService {
 
     List<BookDto> findAll();
 
-    BookDto update(Long id, UpdateBookRequestDto bookRequestDto);
+    BookDto update(Long id, CreateBookRequestDto bookRequestDto);
 
     void deleteById(Long id);
 }

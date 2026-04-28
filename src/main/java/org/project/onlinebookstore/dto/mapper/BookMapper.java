@@ -7,7 +7,6 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.project.onlinebookstore.config.MapStructConfig;
 import org.project.onlinebookstore.dto.book.BookDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
-import org.project.onlinebookstore.dto.book.UpdateBookRequestDto;
 import org.project.onlinebookstore.model.Book;
 
 @Mapper(config = MapStructConfig.class)
@@ -17,5 +16,5 @@ public interface BookMapper {
     Book toModel(CreateBookRequestDto dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void updateFromDto(@MappingTarget Book book, UpdateBookRequestDto dto);
+    void updateFromDto(@MappingTarget Book book, CreateBookRequestDto dto);
 }
