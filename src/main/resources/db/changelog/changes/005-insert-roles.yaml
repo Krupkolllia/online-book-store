@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-insert-roles
+      author: Krupko Illia
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: name, value: ROLE_USER }
+
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: name, value: ROLE_ADMIN }
