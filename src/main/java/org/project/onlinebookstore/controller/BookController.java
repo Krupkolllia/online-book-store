@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "Books API", description = "Operations related to book catalog management")
 @RestController
-@RequestMapping("/books")
 @RequiredArgsConstructor
+@RequestMapping("/books")
 public class BookController {
 
     private final BookService bookService;

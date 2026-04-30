@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.exception.ErrorResponse;
+import org.project.onlinebookstore.exception.RegistrationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -42,6 +43,18 @@ public class CustomGlobalExceptionHandler {
                 "User input is not valid!",
                 request.getRequestURI(),
                 errors
+        );
+    }
+
+    @ExceptionHandler(RegistrationException.class)
+    public ResponseEntity<ErrorResponse> handleRegistration(
+            HttpServletRequest request, RegistrationException ex
+    ) {
+        return buildResponse(
+                HttpStatus.BAD_REQUEST,
+                "Registration failed!",
+                request.getRequestURI(),
+                Map.of()
         );
     }
 
