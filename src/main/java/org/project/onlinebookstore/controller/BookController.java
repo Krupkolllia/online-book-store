@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.project.onlinebookstore.dto.book.BookDto;
+import org.project.onlinebookstore.dto.book.BookResponseDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
 import org.project.onlinebookstore.service.BookService;
 import org.springframework.data.domain.Page;
@@ -28,26 +28,26 @@ public class BookController {
 
     @Operation(summary = "Get all books")
     @GetMapping
-    public Page<BookDto> getAll(Pageable pageable) {
+    public Page<BookResponseDto> getAll(Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
     @Operation(summary = "Get a book by id")
     @GetMapping("/{id}")
-    public BookDto getBookById(@PathVariable Long id) {
+    public BookResponseDto getBookById(@PathVariable Long id) {
         return bookService.findById(id);
     }
 
     @Operation(summary = "Add book to the database")
     @PostMapping
-    public BookDto createBook(@RequestBody @Valid CreateBookRequestDto bookRequestDto) {
+    public BookResponseDto createBook(@RequestBody @Valid CreateBookRequestDto bookRequestDto) {
         return bookService.save(bookRequestDto);
     }
 
     @Operation(summary = "Update a book (PUT) by id")
     @PutMapping("/{id}")
-    public BookDto updateBookById(@PathVariable Long id,
-                              @RequestBody @Valid CreateBookRequestDto bookRequestDto) {
+    public BookResponseDto updateBookById(@PathVariable Long id,
+                                          @RequestBody @Valid CreateBookRequestDto bookRequestDto) {
         return bookService.update(id, bookRequestDto);
     }
 
