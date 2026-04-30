@@ -1,4 +1,4 @@
-package org.project.onlinebookstore.dto.mapper;
+package org.project.onlinebookstore.mapper;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import org.project.onlinebookstore.exception.validator.Isbn;
+import org.project.onlinebookstore.exception.validator.isbn.Isbn;
 
 public record CreateBookRequestDto(
         @Schema(description = "Book title", example = "Clean code")

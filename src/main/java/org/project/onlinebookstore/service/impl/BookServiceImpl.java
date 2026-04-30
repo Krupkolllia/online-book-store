@@ -3,7 +3,7 @@ package org.project.onlinebookstore.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.book.BookDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
-import org.project.onlinebookstore.dto.mapper.BookMapper;
+import org.project.onlinebookstore.mapper.BookMapper;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.model.Book;
 import org.project.onlinebookstore.repository.BookRepository;
