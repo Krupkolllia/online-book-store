@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.user.UserRegistrationRequestDto;
 import org.project.onlinebookstore.dto.user.UserResponseDto;
-import org.project.onlinebookstore.exception.RegistrationException;
 import org.project.onlinebookstore.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +21,7 @@ public class AuthenticationController {
 
     @Operation(summary = "Register a user")
     @PostMapping("/register")
-    public UserResponseDto register(@RequestBody UserRegistrationRequestDto requestDto)
-            throws RegistrationException {
+    public UserResponseDto register(@RequestBody UserRegistrationRequestDto requestDto) {
         return userService.register(requestDto);
     }
 
