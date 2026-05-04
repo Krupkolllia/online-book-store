@@ -1,11 +1,9 @@
 package org.project.onlinebookstore.service.impl;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.user.UserRegistrationRequestDto;
 import org.project.onlinebookstore.dto.user.UserResponseDto;
 import org.project.onlinebookstore.exception.RegistrationException;
