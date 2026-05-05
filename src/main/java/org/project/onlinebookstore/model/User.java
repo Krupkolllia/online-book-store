@@ -19,7 +19,6 @@ import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
@@ -41,17 +40,16 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "first_name", nullable = false)
+    @Column(nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(nullable = false)
     private String lastName;
 
-    @Column(name = "shipping_address")
     private String shippingAddress;
 
-    @Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT(1)")
-    private boolean deleted;
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private boolean isDeleted;
 
     @ManyToMany
     @JoinTable(
@@ -63,9 +61,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
-                .toList();
+        return roles;
     }
 
     @Override
@@ -80,21 +76,21 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return !isDeleted;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !isDeleted;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return !isDeleted;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !isDeleted;
     }
 }

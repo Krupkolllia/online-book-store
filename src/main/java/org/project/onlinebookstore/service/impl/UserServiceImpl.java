@@ -1,11 +1,11 @@
 package org.project.onlinebookstore.service.impl;
 
 import jakarta.transaction.Transactional;
-import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.user.UserRegistrationRequestDto;
 import org.project.onlinebookstore.dto.user.UserResponseDto;
+import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.exception.RegistrationException;
 import org.project.onlinebookstore.mapper.UserMapper;
 import org.project.onlinebookstore.model.Role;
@@ -41,10 +41,10 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(requestDto.password()));
 
         Role role = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new IllegalStateException("ROLE_USER not found"));
-        user.setRoles(new HashSet<>(Set.of(role)));
+                .orElseThrow(() -> new EntityNotFoundException(RoleName.ROLE_USER + " not found"));
+        user.setRoles(Set.of(role));
 
-        User savedUser = userRepository.save(user);
-        return userMapper.toDto(savedUser);
+        userRepository.save(user);
+        return userMapper.toDto(user);
     }
 }
