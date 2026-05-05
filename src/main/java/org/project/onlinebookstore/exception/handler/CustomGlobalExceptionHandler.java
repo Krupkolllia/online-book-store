@@ -51,7 +51,7 @@ public class CustomGlobalExceptionHandler {
             HttpServletRequest request, RegistrationException ex
     ) {
         return buildResponse(
-                HttpStatus.BAD_REQUEST,
+                HttpStatus.CONFLICT,
                 "Registration failed!",
                 request.getRequestURI(),
                 Map.of()

@@ -2,6 +2,7 @@ package org.project.onlinebookstore.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.user.UserRegistrationRequestDto;
 import org.project.onlinebookstore.dto.user.UserResponseDto;
@@ -20,8 +21,8 @@ public class AuthenticationController {
     private final UserService userService;
 
     @Operation(summary = "Register a user")
-    @PostMapping("/register")
-    public UserResponseDto register(@RequestBody UserRegistrationRequestDto requestDto) {
+    @PostMapping("/registration")
+    public UserResponseDto register(@RequestBody @Valid UserRegistrationRequestDto requestDto) {
         return userService.register(requestDto);
     }
 
