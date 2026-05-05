@@ -1,7 +1,7 @@
 package org.project.onlinebookstore.security;
 
 import lombok.RequiredArgsConstructor;
-import org.project.onlinebookstore.repository.UserRepository;
+import org.project.onlinebookstore.repository.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
