@@ -1,8 +1,7 @@
 package org.project.onlinebookstore.repository.book.spec;
 
-import java.util.List;
-
 import jakarta.persistence.criteria.Predicate;
+import java.util.List;
 import org.project.onlinebookstore.dto.book.BookSearchParametersDto;
 import org.project.onlinebookstore.model.Book;
 import org.project.onlinebookstore.repository.SpecificationProvider;

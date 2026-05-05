@@ -2,11 +2,13 @@ package org.project.onlinebookstore.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.book.BookResponseDto;
+import org.project.onlinebookstore.dto.book.BookSearchParametersDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.mapper.BookMapper;
 import org.project.onlinebookstore.model.Book;
 import org.project.onlinebookstore.repository.book.BookRepository;
+import org.project.onlinebookstore.repository.book.spec.BookSpecificationBuilder;
 import org.project.onlinebookstore.service.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+
+    private final BookSpecificationBuilder bookSpecificationBuilder;
 
     private final BookMapper bookMapper;
 
@@ -38,6 +42,12 @@ public class BookServiceImpl implements BookService {
     public Page<BookResponseDto> findAll(Pageable pageable) {
         return bookRepository.findAll(pageable).map(bookMapper::toDto);
 
+    }
+
+    @Override
+    public Page<BookResponseDto> search(BookSearchParametersDto params, Pageable pageable) {
+        return bookRepository.findAll(bookSpecificationBuilder.build(params), pageable)
+                .map(bookMapper::toDto);
     }
 
     @Override

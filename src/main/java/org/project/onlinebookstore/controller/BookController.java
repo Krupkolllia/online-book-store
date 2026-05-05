@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.book.BookResponseDto;
+import org.project.onlinebookstore.dto.book.BookSearchParametersDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
 import org.project.onlinebookstore.service.BookService;
 import org.springframework.data.domain.Page;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -32,6 +34,14 @@ public class BookController {
     @GetMapping
     public Page<BookResponseDto> getAll(Pageable pageable) {
         return bookService.findAll(pageable);
+    }
+
+    @Operation(summary = "Search books by parameters")
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/search")
+    public Page<BookResponseDto> search(@ModelAttribute @Valid BookSearchParametersDto params,
+                                        Pageable pageable) {
+        return bookService.search(params, pageable);
     }
 
     @Operation(summary = "Get a book by id")
