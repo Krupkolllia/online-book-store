@@ -1,17 +1,17 @@
-package org.project.onlinebookstore.dto.mapper;
+package org.project.onlinebookstore.mapper;
 
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.project.onlinebookstore.config.MapStructConfig;
-import org.project.onlinebookstore.dto.book.BookDto;
+import org.project.onlinebookstore.dto.book.BookResponseDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
 import org.project.onlinebookstore.model.Book;
 
 @Mapper(config = MapStructConfig.class)
 public interface BookMapper {
-    BookDto toDto(Book book);
+    BookResponseDto toDto(Book book);
 
     Book toModel(CreateBookRequestDto dto);
 

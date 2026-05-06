@@ -1,10 +1,10 @@
 package org.project.onlinebookstore.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.project.onlinebookstore.dto.book.BookDto;
+import org.project.onlinebookstore.dto.book.BookResponseDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
-import org.project.onlinebookstore.dto.mapper.BookMapper;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
+import org.project.onlinebookstore.mapper.BookMapper;
 import org.project.onlinebookstore.model.Book;
 import org.project.onlinebookstore.repository.BookRepository;
 import org.project.onlinebookstore.service.BookService;
@@ -21,13 +21,13 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
 
     @Override
-    public BookDto save(CreateBookRequestDto bookRequestDto) {
+    public BookResponseDto save(CreateBookRequestDto bookRequestDto) {
         Book book = bookMapper.toModel(bookRequestDto);
         return bookMapper.toDto(bookRepository.save(book));
     }
 
     @Override
-    public BookDto findById(Long id) {
+    public BookResponseDto findById(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Cannot find a book by id: " + id)
         );
@@ -35,13 +35,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<BookDto> findAll(Pageable pageable) {
+    public Page<BookResponseDto> findAll(Pageable pageable) {
         return bookRepository.findAll(pageable).map(bookMapper::toDto);
 
     }
 
     @Override
-    public BookDto update(Long id, CreateBookRequestDto bookRequestDto) {
+    public BookResponseDto update(Long id, CreateBookRequestDto bookRequestDto) {
         Book book = bookRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Cannot find a book by id: " + id)
         );

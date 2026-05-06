@@ -1,22 +1,23 @@
-package org.project.onlinebookstore.exception.validator;
+package org.project.onlinebookstore.exception.validator.fieldmatch;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Documented
-@Constraint(validatedBy = IsbnValidator.class)
-@Target({ ElementType.FIELD, ElementType.PARAMETER })
+@Constraint(validatedBy = FieldMatchValidator.class)
+@Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Isbn {
+public @interface FieldMatch {
 
-    String message() default "Invalid ISBN";
+    String message() default "Fields do not match";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    String field();
+    String fieldMatch();
 }
