@@ -15,6 +15,7 @@ public record CreateBookRequestDto(
         @NotBlank
         String author,
         @Schema(description = "A unique ISBN number of book", example = "978-0135398548")
+        @NotBlank
         @Isbn
         String isbn,
         @Schema(description = "Price of the book", example = "100.00")
