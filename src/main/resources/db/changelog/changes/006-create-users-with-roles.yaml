@@ -1,0 +1,102 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 006-create-users-with-roles
+      author: Krupko Illia
+      changes:
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: admin@mail.com
+              - column:
+                  name: password
+                  value: "$2a$10$Wq8xYpQ9vZQ9vZQ9vZQ9vOeJ0lQ1uQ9cQeFQx9n8cQmQw1yQm"
+              - column:
+                  name: first_name
+                  value: Admin
+              - column:
+                  name: last_name
+                  value: User
+              - column:
+                  name: shipping_address
+                  value: N/A
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: user1@mail.com
+              - column:
+                  name: password
+                  value: "$2a$10$Wq8xYpQ9vZQ9vZQ9vZQ9vOeJ0lQ1uQ9cQeFQx9n8cQmQw1yQm"
+              - column:
+                  name: first_name
+                  value: Ivan
+              - column:
+                  name: last_name
+                  value: Petrov
+              - column:
+                  name: shipping_address
+                  value: Kyiv, Ukraine
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  value: user2@mail.com
+              - column:
+                  name: password
+                  value: "$2a$10$Wq8xYpQ9vZQ9vZQ9vZQ9vOeJ0lQ1uQ9cQeFQx9n8cQmQw1yQm"
+              - column:
+                  name: first_name
+                  value: Alex
+              - column:
+                  name: last_name
+                  value: Smirnov
+              - column:
+                  name: shipping_address
+                  value: Warsaw, Poland
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: (SELECT id FROM users WHERE email='admin@mail.com')
+              - column:
+                  name: role_id
+                  valueNumeric: 1
+
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: (SELECT id FROM users WHERE email='user1@mail.com')
+              - column:
+                  name: role_id
+                  valueNumeric: 2
+
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: (SELECT id FROM users WHERE email='user2@mail.com')
+              - column:
+                  name: role_id
+                  valueNumeric: 2

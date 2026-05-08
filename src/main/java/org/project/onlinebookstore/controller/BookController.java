@@ -9,6 +9,7 @@ import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
 import org.project.onlinebookstore.service.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,24 +28,28 @@ public class BookController {
     private final BookService bookService;
 
     @Operation(summary = "Get all books")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping
     public Page<BookResponseDto> getAll(Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
     @Operation(summary = "Get a book by id")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
     public BookResponseDto getBookById(@PathVariable Long id) {
         return bookService.findById(id);
     }
 
     @Operation(summary = "Add book to the database")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public BookResponseDto createBook(@RequestBody @Valid CreateBookRequestDto bookRequestDto) {
         return bookService.save(bookRequestDto);
     }
 
     @Operation(summary = "Update a book (PUT) by id")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public BookResponseDto updateBookById(@PathVariable Long id,
                                           @RequestBody @Valid CreateBookRequestDto bookRequestDto) {
@@ -52,6 +57,7 @@ public class BookController {
     }
 
     @Operation(summary = "Delete a book by id")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteBookById(@PathVariable Long id) {
         bookService.deleteById(id);
