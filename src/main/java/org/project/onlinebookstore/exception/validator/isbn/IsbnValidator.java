@@ -8,7 +8,7 @@ public class IsbnValidator implements ConstraintValidator<Isbn, String> {
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
         if (value == null || value.isBlank()) {
-            return false;
+            return true;
         }
 
         String isbn = value.replace("-", "").replace(" ", "");
