@@ -9,6 +9,7 @@ import org.project.onlinebookstore.exception.ErrorResponse;
 import org.project.onlinebookstore.exception.RegistrationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -53,6 +54,18 @@ public class CustomGlobalExceptionHandler {
         return buildResponse(
                 HttpStatus.CONFLICT,
                 "Registration failed!",
+                request.getRequestURI(),
+                Map.of()
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(
+            HttpServletRequest request, AccessDeniedException ex
+    ) {
+        return buildResponse(
+                HttpStatus.FORBIDDEN,
+                "Access denied",
                 request.getRequestURI(),
                 Map.of()
         );
