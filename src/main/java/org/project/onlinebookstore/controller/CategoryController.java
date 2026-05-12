@@ -5,7 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.book.BookResponseDtoWithoutCategoryIds;
-import org.project.onlinebookstore.dto.category.CategoryDto;
+import org.project.onlinebookstore.dto.category.CategoryRequestDto;
+import org.project.onlinebookstore.dto.category.CategoryResponseDto;
 import org.project.onlinebookstore.service.BookService;
 import org.project.onlinebookstore.service.CategoryService;
 import org.springframework.data.domain.Page;
@@ -35,29 +36,29 @@ public class CategoryController {
     @Operation(summary = "Create category")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public CategoryDto createCategory(@RequestBody @Valid CategoryDto categoryDto) {
+    public CategoryResponseDto createCategory(@RequestBody @Valid CategoryRequestDto categoryDto) {
         return categoryService.save(categoryDto);
     }
 
     @Operation(summary = "Get all categories")
     @PreAuthorize("hasRole('USER')")
     @GetMapping
-    public Page<CategoryDto> getAll(Pageable pageable) {
+    public Page<CategoryResponseDto> getAll(Pageable pageable) {
         return categoryService.findAll(pageable);
     }
 
     @Operation(summary = "Get a category by id")
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{id}")
-    public CategoryDto getCategoryById(@PathVariable Long id) {
+    public CategoryResponseDto getCategoryById(@PathVariable Long id) {
         return categoryService.findById(id);
     }
 
     @Operation(summary = "Update a category (PUT) by id")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public CategoryDto updateCategory(
-            @PathVariable Long id, @RequestBody @Valid CategoryDto categoryDto) {
+    public CategoryResponseDto updateCategory(
+            @PathVariable Long id, @RequestBody @Valid CategoryRequestDto categoryDto) {
         return categoryService.update(id, categoryDto);
     }
 

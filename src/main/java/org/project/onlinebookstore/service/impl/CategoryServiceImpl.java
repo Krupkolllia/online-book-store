@@ -1,7 +1,8 @@
 package org.project.onlinebookstore.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.project.onlinebookstore.dto.category.CategoryDto;
+import org.project.onlinebookstore.dto.category.CategoryRequestDto;
+import org.project.onlinebookstore.dto.category.CategoryResponseDto;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.mapper.CategoryMapper;
 import org.project.onlinebookstore.model.Category;
@@ -23,13 +24,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional(readOnly = true)
     @Override
-    public Page<CategoryDto> findAll(Pageable pageable) {
+    public Page<CategoryResponseDto> findAll(Pageable pageable) {
         return categoryRepository.findAll(pageable).map(categoryMapper::toDto);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public CategoryDto findById(Long id) {
+    public CategoryResponseDto findById(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Cannot find a category by id: " + id)
         );
@@ -37,13 +38,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto save(CategoryDto categoryDto) {
+    public CategoryResponseDto save(CategoryRequestDto categoryDto) {
         Category category = categoryMapper.toModel(categoryDto);
         return categoryMapper.toDto(categoryRepository.save(category));
     }
 
     @Override
-    public CategoryDto update(Long id, CategoryDto categoryDto) {
+    public CategoryResponseDto update(Long id, CategoryRequestDto categoryDto) {
         categoryRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Cannot find a category by id: " + id)
         );

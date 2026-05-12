@@ -1,10 +1,7 @@
 package org.project.onlinebookstore.dto.category;
 
-import jakarta.validation.constraints.NotBlank;
-
-public record CategoryDto(
+public record CategoryResponseDto(
         Long id,
-        @NotBlank
         String name,
         String description
 ) {}

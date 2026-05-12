@@ -1,17 +1,19 @@
 package org.project.onlinebookstore.service;
 
 import org.project.onlinebookstore.dto.category.CategoryDto;
+import org.project.onlinebookstore.dto.category.CategoryRequestDto;
+import org.project.onlinebookstore.dto.category.CategoryResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CategoryService {
-    Page<CategoryDto> findAll(Pageable pageable);
+    Page<CategoryResponseDto> findAll(Pageable pageable);
 
-    CategoryDto findById(Long id);
+    CategoryResponseDto findById(Long id);
 
-    CategoryDto save(CategoryDto categoryDto);
+    CategoryResponseDto save(CategoryRequestDto categoryDto);
 
-    CategoryDto update(Long id, CategoryDto categoryDto);
+    CategoryResponseDto update(Long id, CategoryRequestDto categoryDto);
 
     void deleteById(Long id);
 }
