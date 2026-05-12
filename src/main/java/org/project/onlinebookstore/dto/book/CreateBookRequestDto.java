@@ -3,8 +3,11 @@ package org.project.onlinebookstore.dto.book;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.List;
+
 import org.project.onlinebookstore.exception.validator.isbn.Isbn;
 
 public record CreateBookRequestDto(
@@ -26,5 +29,7 @@ public record CreateBookRequestDto(
         String description,
         @Schema(description = "An URL to book's cover image",
                 example = "https://example.com/clean-code.jpg")
-        String coverImage
+        String coverImage,
+        @NotEmpty
+        List<Long> categoriesId
 ) {}
