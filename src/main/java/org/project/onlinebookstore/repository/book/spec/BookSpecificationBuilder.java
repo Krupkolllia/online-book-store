@@ -43,6 +43,12 @@ public class BookSpecificationBuilder implements
             ));
         }
 
+        if (notEmpty(searchParameters.categoryIds())) {
+            spec = spec.and(specProviderManager.getSpecificationProvider(
+                    BookSearchParametersDto.CATEGORY_IDS
+            ).getSpecification(searchParameters.categoryIds()));
+        }
+
         return spec;
     }
 
