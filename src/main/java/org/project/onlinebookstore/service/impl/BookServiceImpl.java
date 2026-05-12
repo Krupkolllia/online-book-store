@@ -2,6 +2,7 @@ package org.project.onlinebookstore.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.book.BookResponseDto;
+import org.project.onlinebookstore.dto.book.BookResponseDtoWithoutCategoryIds;
 import org.project.onlinebookstore.dto.book.BookSearchParametersDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
@@ -43,11 +44,20 @@ public class BookServiceImpl implements BookService {
 
     @Transactional(readOnly = true)
     @Override
+    public Page<BookResponseDtoWithoutCategoryIds> findAllByCategoryId(Long categoryId,
+                                                                       Pageable pageable) {
+        return bookRepository.findAllByCategoryId(categoryId, pageable)
+                .map(bookMapper::toDtoWithoutCategories);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Page<BookResponseDto> findAll(Pageable pageable) {
         return bookRepository.findAll(pageable).map(bookMapper::toDto);
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<BookResponseDto> search(BookSearchParametersDto params, Pageable pageable) {
         return bookRepository.findAll(bookSpecificationBuilder.build(params), pageable)
@@ -65,10 +75,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteById(Long id) {
-        bookRepository.findById(id).orElseThrow(
+        Book book = bookRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Cannot find a book by id: " + id)
         );
-        bookRepository.deleteById(id);
+        bookRepository.delete(book);
     }
 
 }
