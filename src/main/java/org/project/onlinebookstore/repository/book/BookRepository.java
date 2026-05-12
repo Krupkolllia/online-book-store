@@ -8,6 +8,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
@@ -19,12 +21,13 @@ public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificat
     @Override
     @NonNull
     @EntityGraph(attributePaths = "categories")
-    Optional<Book> findById(@NonNull Long id);
+    Page<Book> findAll(Specification<Book> spec, @NonNull Pageable pageable);
 
     @Override
     @NonNull
     @EntityGraph(attributePaths = "categories")
-    Page<Book> findAll(Specification<Book> spec, @NonNull Pageable pageable);
+    Optional<Book> findById(@NonNull Long id);
 
-    Page<Book> findAllByCategoryId(Long categoryId, Pageable pageable);
+    @Query("SELECT b FROM Book b JOIN b.categories c WHERE c.id = :categoryId")
+    Page<Book> findAllByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
 }
