@@ -5,7 +5,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.project.onlinebookstore.config.MapStructConfig;
-import org.project.onlinebookstore.dto.category.CategoryDto;
 import org.project.onlinebookstore.dto.category.CategoryRequestDto;
 import org.project.onlinebookstore.dto.category.CategoryResponseDto;
 import org.project.onlinebookstore.model.Category;
