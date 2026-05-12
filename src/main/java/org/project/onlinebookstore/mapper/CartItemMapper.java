@@ -1,5 +1,7 @@
 package org.project.onlinebookstore.mapper;
 
+import java.util.List;
+import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -7,8 +9,6 @@ import org.project.onlinebookstore.config.MapStructConfig;
 import org.project.onlinebookstore.dto.cart.CartItemRequestDto;
 import org.project.onlinebookstore.dto.cart.CartItemResponseDto;
 import org.project.onlinebookstore.model.CartItem;
-import java.util.List;
-import java.util.Set;
 
 @Mapper(config = MapStructConfig.class, uses = BookMapper.class)
 public interface CartItemMapper {
