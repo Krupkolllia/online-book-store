@@ -79,7 +79,7 @@ databaseChangeLog:
                   valueComputed: (SELECT id FROM users WHERE email='admin@mail.com')
               - column:
                   name: role_id
-                  valueNumeric: 1
+                  valueNumeric: 2
 
         - insert:
             tableName: users_roles
@@ -89,7 +89,7 @@ databaseChangeLog:
                   valueComputed: (SELECT id FROM users WHERE email='user1@mail.com')
               - column:
                   name: role_id
-                  valueNumeric: 2
+                  valueNumeric: 1
 
         - insert:
             tableName: users_roles
@@ -99,4 +99,4 @@ databaseChangeLog:
                   valueComputed: (SELECT id FROM users WHERE email='user2@mail.com')
               - column:
                   name: role_id
-                  valueNumeric: 2
+                  valueNumeric: 1

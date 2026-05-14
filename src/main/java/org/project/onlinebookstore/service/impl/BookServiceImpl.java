@@ -2,6 +2,7 @@ package org.project.onlinebookstore.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.book.BookResponseDto;
+import org.project.onlinebookstore.dto.book.BookResponseDtoWithoutCategoryIds;
 import org.project.onlinebookstore.dto.book.BookSearchParametersDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
@@ -13,8 +14,10 @@ import org.project.onlinebookstore.service.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
@@ -25,11 +28,12 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
 
     @Override
-    public BookResponseDto save(CreateBookRequestDto bookRequestDto) {
-        Book book = bookMapper.toModel(bookRequestDto);
+    public BookResponseDto save(CreateBookRequestDto bookDto) {
+        Book book = bookMapper.toModel(bookDto);
         return bookMapper.toDto(bookRepository.save(book));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public BookResponseDto findById(Long id) {
         Book book = bookRepository.findById(id).orElseThrow(
@@ -38,12 +42,22 @@ public class BookServiceImpl implements BookService {
         return bookMapper.toDto(book);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Page<BookResponseDtoWithoutCategoryIds> findAllByCategoryId(Long categoryId,
+                                                                       Pageable pageable) {
+        return bookRepository.findAllByCategoryId(categoryId, pageable)
+                .map(bookMapper::toDtoWithoutCategories);
+    }
+
+    @Transactional(readOnly = true)
     @Override
     public Page<BookResponseDto> findAll(Pageable pageable) {
         return bookRepository.findAll(pageable).map(bookMapper::toDto);
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Page<BookResponseDto> search(BookSearchParametersDto params, Pageable pageable) {
         return bookRepository.findAll(bookSpecificationBuilder.build(params), pageable)
@@ -66,5 +80,4 @@ public class BookServiceImpl implements BookService {
         }
         bookRepository.deleteById(id);
     }
-
 }
