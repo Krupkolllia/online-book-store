@@ -1,6 +1,7 @@
 package org.project.onlinebookstore.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.project.onlinebookstore.dto.cart.CartItemQuantityRequestDto;
 import org.project.onlinebookstore.dto.cart.CartItemResponseDto;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.mapper.CartItemMapper;
@@ -22,9 +23,9 @@ public class CartItemServiceImpl implements CartItemService {
     private final CartItemMapper cartItemMapper;
 
     @Override
-    public CartItemResponseDto updateQuantityById(Long id, int quantity) {
+    public CartItemResponseDto updateQuantityById(Long id, CartItemQuantityRequestDto dto) {
         CartItem cartItem = findCartItemById(id);
-        cartItem.setQuantity(quantity);
+        cartItem.setQuantity(dto.quantity());
 
         return cartItemMapper.toDto(cartItem);
     }
