@@ -1,7 +1,7 @@
 package org.project.onlinebookstore.repository.book;
 
 import java.util.Optional;
-import org.project.onlinebookstore.model.Book;
+import org.project.onlinebookstore.model.book.Book;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

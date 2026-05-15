@@ -7,7 +7,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.project.onlinebookstore.config.MapStructConfig;
 import org.project.onlinebookstore.dto.category.CategoryRequestDto;
 import org.project.onlinebookstore.dto.category.CategoryResponseDto;
-import org.project.onlinebookstore.model.Category;
+import org.project.onlinebookstore.model.book.Category;
 
 @Mapper(config = MapStructConfig.class)
 public interface CategoryMapper {

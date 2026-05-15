@@ -5,7 +5,7 @@ import org.project.onlinebookstore.dto.category.CategoryRequestDto;
 import org.project.onlinebookstore.dto.category.CategoryResponseDto;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.mapper.CategoryMapper;
-import org.project.onlinebookstore.model.Category;
+import org.project.onlinebookstore.model.book.Category;
 import org.project.onlinebookstore.repository.category.CategoryRepository;
 import org.project.onlinebookstore.service.CategoryService;
 import org.springframework.data.domain.Page;

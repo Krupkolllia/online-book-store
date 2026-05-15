@@ -1,4 +1,4 @@
-package org.project.onlinebookstore.model;
+package org.project.onlinebookstore.model.cart;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+import org.project.onlinebookstore.model.user.User;
 
 @Entity
 @Getter

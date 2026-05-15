@@ -4,7 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.book.BookSearchParametersDto;
 import org.project.onlinebookstore.dto.spec.PriceRange;
-import org.project.onlinebookstore.model.Book;
+import org.project.onlinebookstore.model.book.Book;
 import org.project.onlinebookstore.repository.SpecificationBuilder;
 import org.project.onlinebookstore.repository.SpecificationProviderManager;
 import org.springframework.data.jpa.domain.Specification;

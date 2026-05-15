@@ -1,7 +1,7 @@
 package org.project.onlinebookstore.repository.user;
 
 import java.util.Optional;
-import org.project.onlinebookstore.model.User;
+import org.project.onlinebookstore.model.user.User;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 

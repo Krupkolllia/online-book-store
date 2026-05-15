@@ -7,7 +7,7 @@ import org.project.onlinebookstore.dto.book.BookSearchParametersDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.mapper.BookMapper;
-import org.project.onlinebookstore.model.Book;
+import org.project.onlinebookstore.model.book.Book;
 import org.project.onlinebookstore.repository.book.BookRepository;
 import org.project.onlinebookstore.repository.book.spec.BookSpecificationBuilder;
 import org.project.onlinebookstore.service.BookService;
