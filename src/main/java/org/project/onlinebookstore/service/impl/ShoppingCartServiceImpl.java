@@ -8,6 +8,8 @@ import org.project.onlinebookstore.dto.cart.ShoppingCartResponseDto;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.mapper.CartItemMapper;
 import org.project.onlinebookstore.mapper.ShoppingCartMapper;
+import org.project.onlinebookstore.model.book.Book;
+import org.project.onlinebookstore.repository.book.BookRepository;
 import org.project.onlinebookstore.model.cart.CartItem;
 import org.project.onlinebookstore.model.cart.ShoppingCart;
 import org.project.onlinebookstore.model.user.User;
