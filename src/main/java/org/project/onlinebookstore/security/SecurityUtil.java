@@ -1,6 +1,6 @@
 package org.project.onlinebookstore.security;
 
-import org.project.onlinebookstore.model.User;
+import org.project.onlinebookstore.model.user.User;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
