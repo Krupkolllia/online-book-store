@@ -1,4 +1,101 @@
 package org.project.onlinebookstore.service.impl;
 
-public class OrderServiceImpl {
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.project.onlinebookstore.dto.order.OrderRequestDto;
+import org.project.onlinebookstore.dto.order.OrderResponseDto;
+import org.project.onlinebookstore.dto.order.UpdateOrderStatusRequestDto;
+import org.project.onlinebookstore.exception.EntityNotFoundException;
+import org.project.onlinebookstore.mapper.OrderMapper;
+import org.project.onlinebookstore.model.cart.ShoppingCart;
+import org.project.onlinebookstore.model.order.Order;
+import org.project.onlinebookstore.model.order.OrderItem;
+import org.project.onlinebookstore.model.order.OrderStatus;
+import org.project.onlinebookstore.model.user.User;
+import org.project.onlinebookstore.repository.cart.ShoppingCartRepository;
+import org.project.onlinebookstore.repository.order.OrderRepository;
+import org.project.onlinebookstore.security.SecurityUtil;
+import org.project.onlinebookstore.service.OrderService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class OrderServiceImpl implements OrderService {
+
+    private final OrderRepository orderRepository;
+
+    private final ShoppingCartRepository shoppingCartRepository;
+
+    private final OrderMapper orderMapper;
+
+    @Override
+    public OrderResponseDto createOrder(OrderRequestDto requestDto) {
+        User user = SecurityUtil.getUserFromSecurityContext();
+        Long userId = user.getId();
+
+        ShoppingCart shoppingCart = shoppingCartRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException(
+                        "There is no shopping cart for user with id: " + userId)
+        );
+
+        Order order = new Order();
+        order.setUser(user);
+        order.setOrderDate(LocalDateTime.now());
+        order.setShippingAddress(requestDto.shippingAddress());
+        order.setStatus(OrderStatus.PROCESSING);
+
+        Set<OrderItem> orderItems = shoppingCart.getCartItems().stream()
+                .map(cartItem -> {
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setBook(cartItem.getBook());
+                    orderItem.setQuantity(cartItem.getQuantity());
+                    orderItem.setPrice(cartItem.getBook().getPrice());
+                    orderItem.setOrder(order);
+                    return orderItem;
+                })
+                .collect(Collectors.toSet());
+
+        BigDecimal total = orderItems.stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        order.setTotal(total);
+
+        order.setOrderItems(orderItems);
+
+        shoppingCart.getCartItems().clear();
+        shoppingCartRepository.save(shoppingCart);
+
+        orderRepository.save(order);
+
+        return orderMapper.toDto(order);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<OrderResponseDto> findAll(Pageable pageable) {
+        User user = SecurityUtil.getUserFromSecurityContext();
+
+        return orderRepository.findAllByUserId(user.getId(), pageable)
+                .map(orderMapper::toDto);
+
+    }
+
+    @Override
+    public OrderResponseDto updateOrderStatus(Long id, UpdateOrderStatusRequestDto requestDto) {
+        Order order = orderRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("There is no order with id: " + id)
+        );
+
+        orderMapper.updateOrderStatusFromDto(order, requestDto);
+        orderRepository.save(order);
+
+        return orderMapper.toDto(order);
+    }
 }
