@@ -6,16 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.lang.NonNull;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    @Override
-    @NonNull
     @EntityGraph(attributePaths = {"orderItems", "orderItems.book"})
-    Page<Order> findAll(@NonNull Pageable pageable);
+    Page<Order> findAllByUserId(Long userId, Pageable pageable);
 
-    @Override
-    @NonNull
     @EntityGraph(attributePaths = {"orderItems", "orderItems.book"})
-    Optional<Order> findById(@NonNull Long id);
+    Optional<Order> findByIdAndUserId(Long id, Long userId);
 }
