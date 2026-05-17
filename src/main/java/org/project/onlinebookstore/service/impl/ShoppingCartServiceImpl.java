@@ -8,6 +8,7 @@ import org.project.onlinebookstore.mapper.CartItemMapper;
 import org.project.onlinebookstore.mapper.ShoppingCartMapper;
 import org.project.onlinebookstore.model.CartItem;
 import org.project.onlinebookstore.model.ShoppingCart;
+import org.project.onlinebookstore.model.User;
 import org.project.onlinebookstore.repository.cart.ShoppingCartRepository;
 import org.project.onlinebookstore.security.SecurityUtil;
 import org.project.onlinebookstore.service.ShoppingCartService;
@@ -24,6 +25,14 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final ShoppingCartMapper shoppingCartMapper;
 
     private final CartItemMapper cartItemMapper;
+
+    @Override
+    public ShoppingCart createShoppingCartForUser(User user) {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setUser(user);
+
+        return shoppingCartRepository.save(shoppingCart);
+    }
 
     @Override
     @Transactional(readOnly = true)
