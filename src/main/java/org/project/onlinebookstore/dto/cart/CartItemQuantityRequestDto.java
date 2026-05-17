@@ -1,5 +1,5 @@
 package org.project.onlinebookstore.dto.cart;
 
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 
-public record CartItemQuantityRequestDto(@Min(1) int quantity) {}
+public record CartItemQuantityRequestDto(@Positive int quantity) {}
