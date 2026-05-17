@@ -8,6 +8,7 @@ import org.project.onlinebookstore.mapper.CartItemMapper;
 import org.project.onlinebookstore.model.CartItem;
 import org.project.onlinebookstore.model.User;
 import org.project.onlinebookstore.repository.cart.CartItemRepository;
+import org.project.onlinebookstore.security.SecurityUtil;
 import org.project.onlinebookstore.service.CartItemService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -32,9 +33,7 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public void deleteById(Long id) {
-        // SecurityUtil for extracting user from SecurityContext is introduced in the next PR
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = user.getId();
+        Long userId = SecurityUtil.getUserFromSecurityContext().getId();
 
         if (!cartItemRepository.existsByIdAndShoppingCartUserId(id, userId)) {
             throw new EntityNotFoundException(
@@ -44,8 +43,7 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     private CartItem findCartItemById(Long id) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = user.getId();
+        Long userId = SecurityUtil.getUserFromSecurityContext().getId();
 
         return cartItemRepository.findByIdAndShoppingCartUserId(id, userId)
                 .orElseThrow(() -> new EntityNotFoundException(
