@@ -6,11 +6,9 @@ import org.project.onlinebookstore.dto.cart.CartItemResponseDto;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.mapper.CartItemMapper;
 import org.project.onlinebookstore.model.CartItem;
-import org.project.onlinebookstore.model.User;
 import org.project.onlinebookstore.repository.cart.CartItemRepository;
 import org.project.onlinebookstore.security.SecurityUtil;
 import org.project.onlinebookstore.service.CartItemService;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +33,8 @@ public class CartItemServiceImpl implements CartItemService {
     public void deleteById(Long id) {
         Long userId = SecurityUtil.getUserFromSecurityContext().getId();
 
-        if (!cartItemRepository.existsByIdAndShoppingCartUserId(id, userId)) {
+        // userId == cartId because of Shared Primary Key pattern
+        if (!cartItemRepository.existsByIdAndShoppingCartId(id, userId)) {
             throw new EntityNotFoundException(
                     "There is no cart item with id " + id + " in shopping cart");
         }
@@ -45,7 +44,8 @@ public class CartItemServiceImpl implements CartItemService {
     private CartItem findCartItemById(Long id) {
         Long userId = SecurityUtil.getUserFromSecurityContext().getId();
 
-        return cartItemRepository.findByIdAndShoppingCartUserId(id, userId)
+        // userId == cartId because of Shared Primary Key pattern
+        return cartItemRepository.findByIdAndShoppingCartId(id, userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "There is no cart item with id " + id + " in shopping cart")
                 );
