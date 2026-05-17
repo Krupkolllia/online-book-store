@@ -32,16 +32,24 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public void deleteById(Long id) {
-        cartItemRepository.delete(findCartItemById(id));
-    }
-
-    private CartItem findCartItemById(Long cartItemId) {
+        // SecurityUtil for extracting user from SecurityContext is introduced in the next PR
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = user.getId();
 
-        return cartItemRepository.findByIdAndShoppingCartUserId(cartItemId, userId)
+        if (!cartItemRepository.existsByIdAndShoppingCartUserId(id, userId)) {
+            throw new EntityNotFoundException(
+                    "There is no cart item with id " + id + " in shopping cart");
+        }
+        cartItemRepository.deleteById(id);
+    }
+
+    private CartItem findCartItemById(Long id) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = user.getId();
+
+        return cartItemRepository.findByIdAndShoppingCartUserId(id, userId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "There is no cart item with id " + cartItemId + " in shopping cart")
+                        "There is no cart item with id " + id + " in shopping cart")
                 );
     }
 }
