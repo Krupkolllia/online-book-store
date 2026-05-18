@@ -13,6 +13,7 @@ import org.project.onlinebookstore.exception.EmptyShoppingCartException;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.mapper.OrderItemMapper;
 import org.project.onlinebookstore.mapper.OrderMapper;
+import org.project.onlinebookstore.model.cart.CartItem;
 import org.project.onlinebookstore.model.cart.ShoppingCart;
 import org.project.onlinebookstore.model.order.Order;
 import org.project.onlinebookstore.model.order.OrderItem;
@@ -53,39 +54,15 @@ public class OrderServiceImpl implements OrderService {
                         "There is no shopping cart for user with id: " + userId)
         );
 
-        if (shoppingCart.getCartItems().isEmpty()) {
+        Set<CartItem> cartItems = shoppingCart.getCartItems();
+        if (cartItems.isEmpty()) {
             throw new EmptyShoppingCartException("Unable to create an order: cart is empty");
         }
 
-        Order order = new Order();
-        order.setUser(user);
-        order.setOrderDate(LocalDateTime.now());
-        order.setShippingAddress(requestDto.shippingAddress());
-        order.setStatus(OrderStatus.PROCESSING);
-
-        Set<OrderItem> orderItems = shoppingCart.getCartItems().stream()
-                .map(cartItem -> {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setBook(cartItem.getBook());
-                    orderItem.setQuantity(cartItem.getQuantity());
-                    orderItem.setPrice(cartItem.getBook().getPrice());
-                    orderItem.setOrder(order);
-                    return orderItem;
-                })
-                .collect(Collectors.toSet());
-
-        BigDecimal total = orderItems.stream()
-                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        order.setTotal(total);
-
-        order.setOrderItems(orderItems);
-
-        shoppingCart.getCartItems().clear();
+        Order order = buildOrder(user, requestDto, cartItems);
+        cartItems.clear();
         shoppingCartRepository.save(shoppingCart);
-
         orderRepository.save(order);
-
         return orderMapper.toDto(order);
     }
 
@@ -133,5 +110,38 @@ public class OrderServiceImpl implements OrderService {
                 );
 
         return orderItemMapper.toDto(orderItem);
+    }
+
+    private Order buildOrder(User user, OrderRequestDto requestDto, Set<CartItem> cartItems) {
+        Order order = new Order();
+        Set<OrderItem> orderItems = mapCartItemsToOrderItems(cartItems, order);
+
+        order.setUser(user);
+        order.setOrderItems(orderItems);
+        order.setShippingAddress(requestDto.shippingAddress());
+        order.setOrderDate(LocalDateTime.now());
+        order.setTotal(calculateTotal(orderItems));
+        order.setStatus(OrderStatus.PROCESSING);
+
+        return order;
+    }
+
+    private Set<OrderItem> mapCartItemsToOrderItems(Set<CartItem> cartItems, Order order) {
+        return cartItems.stream()
+                .map(cartItem -> {
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setBook(cartItem.getBook());
+                    orderItem.setQuantity(cartItem.getQuantity());
+                    orderItem.setPrice(cartItem.getBook().getPrice());
+                    orderItem.setOrder(order);
+                    return orderItem;
+                })
+                .collect(Collectors.toSet());
+    }
+
+    private BigDecimal calculateTotal(Set<OrderItem> orderItems) {
+        return orderItems.stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

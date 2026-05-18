@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.project.onlinebookstore.exception.EmptyShoppingCartException;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.exception.ErrorResponse;
