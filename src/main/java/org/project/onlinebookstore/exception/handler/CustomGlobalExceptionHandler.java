@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.project.onlinebookstore.exception.EmptyShoppingCartException;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.exception.ErrorResponse;
 import org.project.onlinebookstore.exception.RegistrationException;
@@ -66,6 +68,18 @@ public class CustomGlobalExceptionHandler {
         return buildResponse(
                 HttpStatus.FORBIDDEN,
                 "Access denied",
+                request.getRequestURI(),
+                Map.of()
+        );
+    }
+
+    @ExceptionHandler(EmptyShoppingCartException.class)
+    public ResponseEntity<ErrorResponse> handleEmptyShoppingCart(
+            HttpServletRequest request, EmptyShoppingCartException ex
+    ) {
+        return buildResponse(
+                HttpStatus.BAD_REQUEST,
+                "Shopping cart is empty",
                 request.getRequestURI(),
                 Map.of()
         );

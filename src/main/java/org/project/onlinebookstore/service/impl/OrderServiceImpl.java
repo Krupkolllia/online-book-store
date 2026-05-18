@@ -9,6 +9,7 @@ import org.project.onlinebookstore.dto.order.OrderItemResponseDto;
 import org.project.onlinebookstore.dto.order.OrderRequestDto;
 import org.project.onlinebookstore.dto.order.OrderResponseDto;
 import org.project.onlinebookstore.dto.order.UpdateOrderStatusRequestDto;
+import org.project.onlinebookstore.exception.EmptyShoppingCartException;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.mapper.OrderItemMapper;
 import org.project.onlinebookstore.mapper.OrderMapper;
@@ -51,6 +52,10 @@ public class OrderServiceImpl implements OrderService {
                 () -> new EntityNotFoundException(
                         "There is no shopping cart for user with id: " + userId)
         );
+
+        if (shoppingCart.getCartItems().isEmpty()) {
+            throw new EmptyShoppingCartException("Unable to create an order: cart is empty");
+        }
 
         Order order = new Order();
         order.setUser(user);
