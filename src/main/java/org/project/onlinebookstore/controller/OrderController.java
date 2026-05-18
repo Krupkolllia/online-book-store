@@ -8,7 +8,6 @@ import org.project.onlinebookstore.dto.order.OrderItemResponseDto;
 import org.project.onlinebookstore.dto.order.OrderRequestDto;
 import org.project.onlinebookstore.dto.order.OrderResponseDto;
 import org.project.onlinebookstore.dto.order.UpdateOrderStatusRequestDto;
-import org.project.onlinebookstore.service.OrderItemService;
 import org.project.onlinebookstore.service.OrderService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,8 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final OrderService orderService;
-
-    private final OrderItemService orderItemService;
 
     @Operation(summary = "Place an order with books shipping to requested address")
     @PreAuthorize("hasRole('USER')")
@@ -59,7 +56,7 @@ public class OrderController {
     @GetMapping("{orderId}/items")
     public Page<OrderItemResponseDto> getItemsFromOrder(
             @PathVariable Long orderId, Pageable pageable) {
-        return orderItemService.findItemsByOrderId(orderId, pageable);
+        return orderService.findItemsByOrderId(orderId, pageable);
     }
 
     @Operation(summary = "Get an item by id from order by id")
@@ -67,6 +64,6 @@ public class OrderController {
     @GetMapping("{orderId}/items/{itemId}")
     public OrderItemResponseDto getItemFromOrder(
             @PathVariable Long orderId, @PathVariable Long itemId) {
-        return orderItemService.findItemByIdInOrder(orderId, itemId);
+        return orderService.findItemByIdInOrder(orderId, itemId);
     }
 }

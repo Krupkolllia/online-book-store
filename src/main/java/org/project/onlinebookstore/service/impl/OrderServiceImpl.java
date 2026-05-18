@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.project.onlinebookstore.dto.order.OrderItemResponseDto;
 import org.project.onlinebookstore.dto.order.OrderRequestDto;
 import org.project.onlinebookstore.dto.order.OrderResponseDto;
 import org.project.onlinebookstore.dto.order.UpdateOrderStatusRequestDto;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
+import org.project.onlinebookstore.mapper.OrderItemMapper;
 import org.project.onlinebookstore.mapper.OrderMapper;
 import org.project.onlinebookstore.model.cart.ShoppingCart;
 import org.project.onlinebookstore.model.order.Order;
@@ -16,6 +18,7 @@ import org.project.onlinebookstore.model.order.OrderItem;
 import org.project.onlinebookstore.model.order.OrderStatus;
 import org.project.onlinebookstore.model.user.User;
 import org.project.onlinebookstore.repository.cart.ShoppingCartRepository;
+import org.project.onlinebookstore.repository.order.OrderItemRepository;
 import org.project.onlinebookstore.repository.order.OrderRepository;
 import org.project.onlinebookstore.security.SecurityUtil;
 import org.project.onlinebookstore.service.OrderService;
@@ -34,6 +37,10 @@ public class OrderServiceImpl implements OrderService {
     private final ShoppingCartRepository shoppingCartRepository;
 
     private final OrderMapper orderMapper;
+
+    private final OrderItemRepository orderItemRepository;
+
+    private final OrderItemMapper orderItemMapper;
 
     @Override
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
@@ -97,5 +104,29 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.save(order);
 
         return orderMapper.toDto(order);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<OrderItemResponseDto> findItemsByOrderId(Long orderId, Pageable pageable) {
+        Long userId = SecurityUtil.getUserFromSecurityContext().getId();
+
+        return orderItemRepository.findAllByOrderIdAndOrderUserId(orderId, userId, pageable)
+                .map(orderItemMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrderItemResponseDto findItemByIdInOrder(Long orderId, Long itemId) {
+        Long userId = SecurityUtil.getUserFromSecurityContext().getId();
+
+        OrderItem orderItem = orderItemRepository
+                .findByIdAndOrderIdAndOrderUserId(itemId, orderId, userId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "There is no order item with id: " + itemId)
+                );
+
+        return orderItemMapper.toDto(orderItem);
     }
 }
