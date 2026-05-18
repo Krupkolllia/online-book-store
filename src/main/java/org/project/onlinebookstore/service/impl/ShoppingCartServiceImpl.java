@@ -31,7 +31,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final CartItemMapper cartItemMapper;
 
-
     @Override
     public ShoppingCart createShoppingCartForUser(User user) {
         ShoppingCart shoppingCart = new ShoppingCart();
