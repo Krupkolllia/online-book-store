@@ -14,7 +14,7 @@ public interface ShoppingCartService {
 
     ShoppingCartResponseDto addItemToCart(CartItemRequestDto item);
 
-    CartItemResponseDto updateQuantityById(Long id, CartItemQuantityRequestDto dto);
+    ShoppingCartResponseDto updateQuantityById(Long id, CartItemQuantityRequestDto dto);
 
     void deleteById(Long id);
 }

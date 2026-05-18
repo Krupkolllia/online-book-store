@@ -3,7 +3,6 @@ package org.project.onlinebookstore.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.cart.CartItemQuantityRequestDto;
 import org.project.onlinebookstore.dto.cart.CartItemRequestDto;
-import org.project.onlinebookstore.dto.cart.CartItemResponseDto;
 import org.project.onlinebookstore.dto.cart.ShoppingCartResponseDto;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.mapper.CartItemMapper;
@@ -60,11 +59,13 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     @Override
-    public CartItemResponseDto updateQuantityById(Long id, CartItemQuantityRequestDto dto) {
-        CartItem cartItem = findCartItemById(id);
+    public ShoppingCartResponseDto updateQuantityById(Long id, CartItemQuantityRequestDto dto) {
+        Long userId = SecurityUtil.getUserFromSecurityContext().getId();
+
+        CartItem cartItem = findCartItemById(id, userId);
         cartItem.setQuantity(dto.quantity());
 
-        return cartItemMapper.toDto(cartItem);
+        return shoppingCartMapper.toDto(cartItem.getShoppingCart());
     }
 
     @Override
@@ -86,9 +87,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         );
     }
 
-    private CartItem findCartItemById(Long id) {
-        Long userId = SecurityUtil.getUserFromSecurityContext().getId();
-
+    private CartItem findCartItemById(Long id, Long userId) {
         // userId == cartId because of Shared Primary Key pattern
         return cartItemRepository.findByIdAndShoppingCartId(id, userId)
                 .orElseThrow(() -> new EntityNotFoundException(
