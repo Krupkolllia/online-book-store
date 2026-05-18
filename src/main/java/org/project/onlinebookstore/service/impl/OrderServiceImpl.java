@@ -88,30 +88,6 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDto(order);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Page<OrderItemResponseDto> findItemsByOrderId(Long orderId, Pageable pageable) {
-        Long userId = SecurityUtil.getUserFromSecurityContext().getId();
-
-        return orderItemRepository.findAllByOrderIdAndOrderUserId(orderId, userId, pageable)
-                .map(orderItemMapper::toDto);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public OrderItemResponseDto findItemByIdInOrder(Long orderId, Long itemId) {
-        Long userId = SecurityUtil.getUserFromSecurityContext().getId();
-
-        OrderItem orderItem = orderItemRepository
-                .findByIdAndOrderIdAndOrderUserId(itemId, orderId, userId)
-                .orElseThrow(
-                        () -> new EntityNotFoundException(
-                                "There is no order item with id: " + itemId)
-                );
-
-        return orderItemMapper.toDto(orderItem);
-    }
-
     private Order buildOrder(User user, OrderRequestDto requestDto, Set<CartItem> cartItems) {
         Order order = new Order();
         Set<OrderItem> orderItems = mapCartItemsToOrderItems(cartItems, order);
@@ -143,5 +119,29 @@ public class OrderServiceImpl implements OrderService {
         return orderItems.stream()
                 .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<OrderItemResponseDto> findItemsByOrderId(Long orderId, Pageable pageable) {
+        Long userId = SecurityUtil.getUserFromSecurityContext().getId();
+
+        return orderItemRepository.findAllByOrderIdAndOrderUserId(orderId, userId, pageable)
+                .map(orderItemMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrderItemResponseDto findItemByIdInOrder(Long orderId, Long itemId) {
+        Long userId = SecurityUtil.getUserFromSecurityContext().getId();
+
+        OrderItem orderItem = orderItemRepository
+                .findByIdAndOrderIdAndOrderUserId(itemId, orderId, userId)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(
+                                "There is no order item with id: " + itemId)
+                );
+
+        return orderItemMapper.toDto(orderItem);
     }
 }
