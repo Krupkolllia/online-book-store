@@ -8,7 +8,6 @@ import org.project.onlinebookstore.dto.cart.CartItemQuantityRequestDto;
 import org.project.onlinebookstore.dto.cart.CartItemRequestDto;
 import org.project.onlinebookstore.dto.cart.CartItemResponseDto;
 import org.project.onlinebookstore.dto.cart.ShoppingCartResponseDto;
-import org.project.onlinebookstore.service.CartItemService;
 import org.project.onlinebookstore.service.ShoppingCartService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,8 +29,6 @@ public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;
 
-    private final CartItemService cartItemService;
-
     @Operation(summary = "Add an item to shopping cart")
     @PreAuthorize("hasRole('USER')")
     @PostMapping
@@ -51,7 +48,7 @@ public class ShoppingCartController {
     @PutMapping("/items/{cartItemId}")
     public CartItemResponseDto updateCartItemQuantity(
             @PathVariable Long cartItemId, @RequestBody @Valid CartItemQuantityRequestDto dto) {
-        return cartItemService.updateQuantityById(cartItemId, dto);
+        return shoppingCartService.updateQuantityById(cartItemId, dto);
     }
 
     @Operation(summary = "Delete cart item from shopping cart by id")
@@ -59,6 +56,6 @@ public class ShoppingCartController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("items/{cartItemId}")
     public void deleteCartItemFromCartById(@PathVariable Long cartItemId) {
-        cartItemService.deleteById(cartItemId);
+        shoppingCartService.deleteById(cartItemId);
     }
 }
