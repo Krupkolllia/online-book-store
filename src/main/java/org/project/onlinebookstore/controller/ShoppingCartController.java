@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.cart.CartItemQuantityRequestDto;
 import org.project.onlinebookstore.dto.cart.CartItemRequestDto;
-import org.project.onlinebookstore.dto.cart.CartItemResponseDto;
 import org.project.onlinebookstore.dto.cart.ShoppingCartResponseDto;
 import org.project.onlinebookstore.service.ShoppingCartService;
 import org.springframework.http.HttpStatus;
@@ -46,7 +45,7 @@ public class ShoppingCartController {
     @Operation(summary = "Update (PUT) cart item quantity")
     @PreAuthorize("hasRole('USER')")
     @PutMapping("/items/{cartItemId}")
-    public CartItemResponseDto updateCartItemQuantity(
+    public ShoppingCartResponseDto updateCartItemQuantity(
             @PathVariable Long cartItemId, @RequestBody @Valid CartItemQuantityRequestDto dto) {
         return shoppingCartService.updateQuantityById(cartItemId, dto);
     }

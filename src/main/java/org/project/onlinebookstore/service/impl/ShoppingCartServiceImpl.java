@@ -1,16 +1,18 @@
 package org.project.onlinebookstore.service.impl;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.project.onlinebookstore.dto.cart.CartItemQuantityRequestDto;
 import org.project.onlinebookstore.dto.cart.CartItemRequestDto;
-import org.project.onlinebookstore.dto.cart.CartItemResponseDto;
 import org.project.onlinebookstore.dto.cart.ShoppingCartResponseDto;
 import org.project.onlinebookstore.exception.EntityNotFoundException;
 import org.project.onlinebookstore.mapper.CartItemMapper;
 import org.project.onlinebookstore.mapper.ShoppingCartMapper;
+import org.project.onlinebookstore.model.Book;
 import org.project.onlinebookstore.model.CartItem;
 import org.project.onlinebookstore.model.ShoppingCart;
 import org.project.onlinebookstore.model.User;
+import org.project.onlinebookstore.repository.book.BookRepository;
 import org.project.onlinebookstore.repository.cart.CartItemRepository;
 import org.project.onlinebookstore.repository.cart.ShoppingCartRepository;
 import org.project.onlinebookstore.security.SecurityUtil;
@@ -31,6 +33,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final CartItemMapper cartItemMapper;
 
+    private final BookRepository bookRepository;
+
     @Override
     public ShoppingCart createShoppingCartForUser(User user) {
         ShoppingCart shoppingCart = new ShoppingCart();
@@ -48,35 +52,44 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartResponseDto addItemToCart(CartItemRequestDto itemDto) {
+        Book book = bookRepository.findById(itemDto.bookId())
+                .orElseThrow(() -> new EntityNotFoundException("Book not found"));
+
         Long userId = SecurityUtil.getUserFromSecurityContext().getId();
         ShoppingCart shoppingCart = getCartForAuthenticatedUser(userId);
 
-        CartItem cartItem = cartItemMapper.toModel(itemDto);
-        cartItem.setShoppingCart(shoppingCart);
+        Optional<CartItem> existingItem = shoppingCart.getCartItems().stream()
+                .filter(item -> item.getBook().getId().equals(itemDto.bookId()))
+                .findFirst();
 
-        shoppingCart.getCartItems().add(cartItem);
+        if (existingItem.isPresent()) {
+            existingItem.get().setQuantity(existingItem.get().getQuantity() + itemDto.quantity());
+        } else {
+            CartItem cartItem = cartItemMapper.toModel(itemDto);
+            cartItem.setBook(book);
+            cartItem.setShoppingCart(shoppingCart);
+            shoppingCart.getCartItems().add(cartItem);
+        }
 
         return shoppingCartMapper.toDto(shoppingCartRepository.save(shoppingCart));
     }
 
     @Override
-    public CartItemResponseDto updateQuantityById(Long id, CartItemQuantityRequestDto dto) {
-        CartItem cartItem = findCartItemById(id);
+    public ShoppingCartResponseDto updateQuantityById(Long id, CartItemQuantityRequestDto dto) {
+        Long userId = SecurityUtil.getUserFromSecurityContext().getId();
+
+        CartItem cartItem = findCartItemById(id, userId);
         cartItem.setQuantity(dto.quantity());
 
-        return cartItemMapper.toDto(cartItem);
+        return shoppingCartMapper.toDto(cartItem.getShoppingCart());
     }
 
     @Override
     public void deleteById(Long id) {
         Long userId = SecurityUtil.getUserFromSecurityContext().getId();
+        CartItem cartItem = findCartItemById(id, userId);
 
-        // userId == cartId because of Shared Primary Key pattern
-        if (!cartItemRepository.existsByIdAndShoppingCartId(id, userId)) {
-            throw new EntityNotFoundException(
-                    "There is no cart item with id " + id + " in shopping cart");
-        }
-        cartItemRepository.deleteById(id);
+        cartItemRepository.delete(cartItem);
     }
 
     private ShoppingCart getCartForAuthenticatedUser(Long userId) {
@@ -86,10 +99,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         );
     }
 
-    private CartItem findCartItemById(Long id) {
-        Long userId = SecurityUtil.getUserFromSecurityContext().getId();
-
-        // userId == cartId because of Shared Primary Key pattern
+    private CartItem findCartItemById(Long id, Long userId) {
         return cartItemRepository.findByIdAndShoppingCartId(id, userId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "There is no cart item with id " + id + " in shopping cart")
