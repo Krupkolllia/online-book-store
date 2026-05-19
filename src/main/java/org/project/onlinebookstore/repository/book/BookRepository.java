@@ -13,18 +13,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 
 public interface BookRepository extends JpaRepository<Book, Long>, JpaSpecificationExecutor<Book> {
-    @Override
-    @NonNull
     @EntityGraph(attributePaths = "categories")
-    Page<Book> findAll(@NonNull Pageable pageable);
+    Page<Book> findAll(Pageable pageable);
 
-    @Override
-    @NonNull
     @EntityGraph(attributePaths = "categories")
-    Page<Book> findAll(Specification<Book> spec, @NonNull Pageable pageable);
+    Page<Book> findAll(Specification<Book> spec, Pageable pageable);
 
-    @Override
-    @NonNull
     @EntityGraph(attributePaths = "categories")
     Optional<Book> findById(@NonNull Long id);
 

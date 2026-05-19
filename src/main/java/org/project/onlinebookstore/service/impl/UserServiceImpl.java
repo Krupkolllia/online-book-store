@@ -13,6 +13,7 @@ import org.project.onlinebookstore.model.RoleName;
 import org.project.onlinebookstore.model.User;
 import org.project.onlinebookstore.repository.role.RoleRepository;
 import org.project.onlinebookstore.repository.user.UserRepository;
+import org.project.onlinebookstore.service.ShoppingCartService;
 import org.project.onlinebookstore.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final RoleRepository roleRepository;
+
+    private final ShoppingCartService shoppingCartService;
 
     private final UserMapper userMapper;
 
@@ -45,6 +48,9 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Set.of(role));
 
         userRepository.save(user);
+
+        shoppingCartService.createShoppingCartForUser(user);
+
         return userMapper.toDto(user);
     }
 }
