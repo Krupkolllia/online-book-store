@@ -88,39 +88,6 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toDto(order);
     }
 
-    private Order buildOrder(User user, OrderRequestDto requestDto, Set<CartItem> cartItems) {
-        Order order = new Order();
-        Set<OrderItem> orderItems = mapCartItemsToOrderItems(cartItems, order);
-
-        order.setUser(user);
-        order.setOrderItems(orderItems);
-        order.setShippingAddress(requestDto.shippingAddress());
-        order.setOrderDate(LocalDateTime.now());
-        order.setTotal(calculateTotal(orderItems));
-        order.setStatus(OrderStatus.PROCESSING);
-
-        return order;
-    }
-
-    private Set<OrderItem> mapCartItemsToOrderItems(Set<CartItem> cartItems, Order order) {
-        return cartItems.stream()
-                .map(cartItem -> {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setBook(cartItem.getBook());
-                    orderItem.setQuantity(cartItem.getQuantity());
-                    orderItem.setPrice(cartItem.getBook().getPrice());
-                    orderItem.setOrder(order);
-                    return orderItem;
-                })
-                .collect(Collectors.toSet());
-    }
-
-    private BigDecimal calculateTotal(Set<OrderItem> orderItems) {
-        return orderItems.stream()
-                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
     @Override
     @Transactional(readOnly = true)
     public Page<OrderItemResponseDto> findItemsByOrderId(Long orderId, Pageable pageable) {
