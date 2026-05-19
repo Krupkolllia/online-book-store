@@ -2,7 +2,7 @@ package org.project.onlinebookstore.repository.book.spec;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.project.onlinebookstore.model.Book;
+import org.project.onlinebookstore.model.book.Book;
 import org.project.onlinebookstore.repository.SpecificationProvider;
 import org.project.onlinebookstore.repository.SpecificationProviderManager;
 import org.springframework.stereotype.Component;

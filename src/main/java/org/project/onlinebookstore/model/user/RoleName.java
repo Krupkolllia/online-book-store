@@ -1,4 +1,4 @@
-package org.project.onlinebookstore.model;
+package org.project.onlinebookstore.model.user;
 
 public enum RoleName {
     ROLE_USER,

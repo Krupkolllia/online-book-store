@@ -8,7 +8,7 @@ import org.mapstruct.Named;
 import org.project.onlinebookstore.config.MapStructConfig;
 import org.project.onlinebookstore.dto.cart.CartItemRequestDto;
 import org.project.onlinebookstore.dto.cart.CartItemResponseDto;
-import org.project.onlinebookstore.model.CartItem;
+import org.project.onlinebookstore.model.cart.CartItem;
 
 @Mapper(config = MapStructConfig.class, uses = BookMapper.class)
 public interface CartItemMapper {

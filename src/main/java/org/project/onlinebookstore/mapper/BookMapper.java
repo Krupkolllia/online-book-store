@@ -13,8 +13,8 @@ import org.project.onlinebookstore.config.MapStructConfig;
 import org.project.onlinebookstore.dto.book.BookResponseDto;
 import org.project.onlinebookstore.dto.book.BookResponseDtoWithoutCategoryIds;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
-import org.project.onlinebookstore.model.Book;
-import org.project.onlinebookstore.model.Category;
+import org.project.onlinebookstore.model.book.Book;
+import org.project.onlinebookstore.model.book.Category;
 
 @Mapper(config = MapStructConfig.class)
 public interface BookMapper {

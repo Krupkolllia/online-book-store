@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.project.onlinebookstore.config.MapStructConfig;
 import org.project.onlinebookstore.dto.cart.ShoppingCartResponseDto;
-import org.project.onlinebookstore.model.ShoppingCart;
+import org.project.onlinebookstore.model.cart.ShoppingCart;
 
 @Mapper(config = MapStructConfig.class, uses = CartItemMapper.class)
 public interface ShoppingCartMapper {

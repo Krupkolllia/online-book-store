@@ -1,7 +1,7 @@
 package org.project.onlinebookstore.repository.cart;
 
 import java.util.Optional;
-import org.project.onlinebookstore.model.ShoppingCart;
+import org.project.onlinebookstore.model.cart.ShoppingCart;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
