@@ -2,29 +2,29 @@ package org.project.onlinebookstore.config;
 
 import org.testcontainers.containers.MySQLContainer;
 
-public class MySqlContainer extends MySQLContainer<MySqlContainer> {
+public class MySqlTestContainer extends MySQLContainer<MySqlTestContainer> {
 
     private static final String DB_IMAGE = "mysql:8";
 
-    private static MySqlContainer mySqlContainer;
+    private static MySqlTestContainer mySqlTestContainer;
 
-    private MySqlContainer() {
+    private MySqlTestContainer() {
         super(DB_IMAGE);
     }
 
-    public static synchronized MySqlContainer getInstance() {
-        if (mySqlContainer == null) {
-            mySqlContainer = new MySqlContainer();
+    public static synchronized MySqlTestContainer getInstance() {
+        if (mySqlTestContainer == null) {
+            mySqlTestContainer = new MySqlTestContainer();
         }
-        return mySqlContainer;
+        return mySqlTestContainer;
     }
 
     @Override
     public void start() {
         super.start();
-        System.setProperty("TEST_DB_URL", mySqlContainer.getJdbcUrl());
-        System.setProperty("TEST_DB_USERNAME", mySqlContainer.getUsername());
-        System.setProperty("TEST_DB_PASSWORD", mySqlContainer.getPassword());
+        System.setProperty("TEST_DB_URL", mySqlTestContainer.getJdbcUrl());
+        System.setProperty("TEST_DB_USERNAME", mySqlTestContainer.getUsername());
+        System.setProperty("TEST_DB_PASSWORD", mySqlTestContainer.getPassword());
     }
 
     @Override
