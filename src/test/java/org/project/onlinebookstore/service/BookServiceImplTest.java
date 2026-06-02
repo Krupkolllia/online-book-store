@@ -25,6 +25,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -73,7 +76,7 @@ public class BookServiceImplTest {
         BookResponseDto actual = bookService.save(requestDto);
 
         // Then
-        assertEquals(1L, actual.id());
+        assertThat(actual).isEqualTo(mappedToResponseDtoBook);
 
         verify(bookMapper).toModel(requestDto);
         verify(bookMapper).toDto(savedBook);
@@ -101,7 +104,7 @@ public class BookServiceImplTest {
         BookResponseDto actual = bookService.findById(id);
 
         // Then
-        assertEquals(id, actual.id());
+        assertThat(actual).isEqualTo(mappedToDtoBook);
 
         verify(bookMapper).toDto(foundBook);
         verifyNoMoreInteractions(bookMapper);
@@ -121,16 +124,11 @@ public class BookServiceImplTest {
         when(bookRepository.findById(invalidId)).thenReturn(Optional.empty());
 
         // When
-        EntityNotFoundException exception = assertThrows(
-                EntityNotFoundException.class,
-                () -> bookService.findById(invalidId)
-        );
+        assertThatThrownBy(() -> bookService.findById(invalidId))
+                .hasMessage("Cannot find a book by id: " + invalidId)
+                .isExactlyInstanceOf(EntityNotFoundException.class);
 
         // Then
-        String expected = "Cannot find a book by id: " + invalidId;
-        String actual = exception.getMessage();
-        assertEquals(expected, actual);
-
         verify(bookRepository).findById(invalidId);
         verifyNoMoreInteractions(bookRepository);
     }
@@ -159,12 +157,11 @@ public class BookServiceImplTest {
                 .thenReturn(bookResponseDtoWithoutCategoryIds);
 
         // When
-        Page<BookResponseDtoWithoutCategoryIds> actual =
-                bookService.findAllByCategoryId(categoryId, pageRequest);
+        BookResponseDtoWithoutCategoryIds actual =
+                bookService.findAllByCategoryId(categoryId, pageRequest).getContent().get(0);
 
         // Then
-        assertEquals(1, actual.getContent().size());
-        assertEquals(bookId, actual.getContent().get(0).id());
+        assertThat(actual).isEqualTo(bookResponseDtoWithoutCategoryIds);
 
         verify(bookMapper).toDtoWithoutCategories(book);
         verifyNoMoreInteractions(bookMapper);
@@ -189,11 +186,10 @@ public class BookServiceImplTest {
         when(bookMapper.toDto(book)).thenReturn(mappedToDtoBook);
 
         // When
-        Page<BookResponseDto> actual = bookService.findAll(pageRequest);
+        BookResponseDto actual = bookService.findAll(pageRequest).getContent().get(0);
 
         // Then
-        assertEquals(1, actual.getContent().size());
-        assertEquals(id, actual.getContent().get(0).id());
+        assertThat(actual).isEqualTo(mappedToDtoBook);
 
         verify(bookMapper).toDto(book);
         verifyNoMoreInteractions(bookMapper);
@@ -238,8 +234,7 @@ public class BookServiceImplTest {
         BookResponseDto actual = bookService.update(bookId, updateBookRequestDto);
 
         // Then
-        assertEquals(updatedBook.getId(), actual.id());
-        assertEquals(updatedTitle, actual.title());
+        assertThat(actual).isEqualTo(updatedBookResponseDto);
 
         verify(bookRepository).findById(bookId);
         verify(bookRepository).save(any(Book.class));
@@ -265,16 +260,11 @@ public class BookServiceImplTest {
         );
 
         // When
-        EntityNotFoundException exception = assertThrows(
-                EntityNotFoundException.class,
-                () -> bookService.update(invalidId, requestDto)
-        );
+        assertThatThrownBy(() -> bookService.update(invalidId, requestDto))
+                .hasMessage("Cannot find a book by id: " + invalidId)
+                .isExactlyInstanceOf(EntityNotFoundException.class);
 
         // Then
-        String expected = "Cannot find a book by id: " + invalidId;
-        String actual = exception.getMessage();
-        assertEquals(expected, actual);
-
         verify(bookRepository).findById(invalidId);
         verifyNoMoreInteractions(bookRepository);
     }
@@ -309,16 +299,11 @@ public class BookServiceImplTest {
         when(bookRepository.existsById(invalidId)).thenReturn(false);
 
         // When
-        EntityNotFoundException exception = assertThrows(
-                EntityNotFoundException.class,
-                () -> bookService.deleteById(invalidId)
-        );
+        assertThatThrownBy(() -> bookService.deleteById(invalidId))
+                .hasMessage("Cannot find a book by id: " + invalidId)
+                .isExactlyInstanceOf(EntityNotFoundException.class);
 
         // Then
-        String expected = "Cannot find a book by id: " + invalidId;
-        String actual = exception.getMessage();
-        assertEquals(expected, actual);
-
         verify(bookRepository).existsById(invalidId);
         verify(bookRepository, never()).deleteById(invalidId);
         verifyNoMoreInteractions(bookRepository);
@@ -358,14 +343,10 @@ public class BookServiceImplTest {
         when(bookMapper.toDto(searchedBook)).thenReturn(searchedBookResponseDto);
 
         // When
-        Page<BookResponseDto> actual = bookService.search(searchParams, pageRequest);
+        BookResponseDto actual = bookService.search(searchParams, pageRequest).getContent().get(0);
 
         // Then
-        assertEquals(1, actual.getContent().size());
-
-        BookResponseDto dto = actual.getContent().get(0);
-        assertEquals(id, dto.id());
-        assertEquals(searchedIsbn, dto.isbn());
+        assertThat(actual).isEqualTo(searchedBookResponseDto);
 
         verify(bookRepository).findAll(any(Specification.class), eq(pageRequest));
         verifyNoMoreInteractions(bookRepository);
