@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.project.onlinebookstore.dto.book.BookResponseDto;
 import org.project.onlinebookstore.dto.book.CreateBookRequestDto;
+import org.project.onlinebookstore.util.TestDataHelper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -37,7 +38,7 @@ public class BookControllerTest extends AbstractControllerTest {
         // Given
         Pageable pageable = PageRequest.of(0, 10);
 
-        List<BookResponseDto> expected = createBookResponseDtoList();
+        List<BookResponseDto> expected = TestDataHelper.createBookResponseDtoList();
 
         // When
         MvcResult result = mockMvc.perform(
@@ -57,7 +58,7 @@ public class BookControllerTest extends AbstractControllerTest {
 
         BookResponseDto[] actual = objectMapper.readValue(content, BookResponseDto[].class);
 
-        assertThat(actual).containsExactlyInAnyOrder(expected.toArray(new BookResponseDto[0]));
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test
@@ -70,7 +71,7 @@ public class BookControllerTest extends AbstractControllerTest {
             """)
     public void getBookById_WithValidId_ShouldReturnBookResponseDto() throws Exception {
         // Given
-        BookResponseDto expected = createBookResponseDtoList().get(0);
+        BookResponseDto expected = TestDataHelper.createBookResponseDtoList().get(0);
         Long id = expected.id();
 
         // When
@@ -99,7 +100,7 @@ public class BookControllerTest extends AbstractControllerTest {
     public void search_ValidCase_ShouldReturnPageOfBooks() throws Exception {
         // Given
         Pageable pageable = PageRequest.of(0, 10);
-        BookResponseDto expected = createBookResponseDtoList().get(0);
+        BookResponseDto expected = TestDataHelper.createBookResponseDtoList().get(0);
 
         // When
         MvcResult result = mockMvc.perform(
@@ -205,7 +206,7 @@ public class BookControllerTest extends AbstractControllerTest {
                 1L, "Test title 1 updated", "Test author 1", "978-0134685991",
                 new BigDecimal("9.99"), null, null, Set.of(1L, 2L)
         );
-        Long id = createBookResponseDtoList().get(0).id();
+        Long id = TestDataHelper.createBookResponseDtoList().get(0).id();
 
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
@@ -260,7 +261,7 @@ public class BookControllerTest extends AbstractControllerTest {
             """)
     public void deleteBookById_WithValidId_ShouldReturn204Code() throws Exception {
         // Given
-        Long id = createBookResponseDtoList().get(0).id();
+        Long id = TestDataHelper.createBookResponseDtoList().get(0).id();
 
         // When
         mockMvc.perform(
@@ -284,23 +285,5 @@ public class BookControllerTest extends AbstractControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isNotFound());
-    }
-
-    private List<BookResponseDto> createBookResponseDtoList() {
-        List<BookResponseDto> responseDtoList = new ArrayList<>();
-        responseDtoList.add(new BookResponseDto(
-                1L, "Test title 1", "Test author 1", "978-0134685991",
-                new BigDecimal("9.99"), null, null, Set.of(1L, 2L)
-        ));
-        responseDtoList.add(new BookResponseDto(
-                2L, "Test title 2", "Test author 2", "978-0132350884",
-                new BigDecimal("9.99"), null, null, Set.of(1L, 3L)
-        ));
-        responseDtoList.add(new BookResponseDto(
-                3L, "Test title 3", "Test author 3", "978-0131103627",
-                new BigDecimal("9.99"), null, null, Set.of(2L, 3L)
-        ));
-
-        return responseDtoList;
     }
 }

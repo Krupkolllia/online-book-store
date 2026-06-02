@@ -1,15 +1,13 @@
 package org.project.onlinebookstore.repository;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.project.onlinebookstore.model.book.Book;
 import org.project.onlinebookstore.model.book.Category;
 import org.project.onlinebookstore.repository.book.BookRepository;
-import org.project.onlinebookstore.repository.category.CategoryRepository;
+import org.project.onlinebookstore.util.TestDataHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -17,21 +15,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.jdbc.Sql;
+
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
+import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Transactional
 public class BookRepositoryTest {
+    protected static final String ADD_SCRIPT_PATH = "classpath:database/add-test-data.sql";
+    protected static final String DELETE_SCRIPT_PATH = "classpath:database/delete-test-data.sql";
 
     @Autowired
     private BookRepository bookRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
-
     @Test
+    @Sql(scripts = ADD_SCRIPT_PATH, executionPhase = BEFORE_TEST_METHOD)
+    @Sql(scripts = DELETE_SCRIPT_PATH, executionPhase = AFTER_TEST_METHOD)
     @DisplayName("""
             findAll method when db has Books and Categories
             should return the right Page of
@@ -39,18 +40,15 @@ public class BookRepositoryTest {
             """)
     public void findAll_ValidCase_ShouldReturnPageOfBooks() {
         // Given
-        createAndSaveBooks(createAndSaveCategories());
+        List<Book> expected = TestDataHelper.createBooks();
 
         Pageable pageable = PageRequest.of(0, 10);
 
         // When
-        Page<Book> actual = bookRepository.findAll(pageable);
+        List<Book> actual = bookRepository.findAll(pageable).getContent();
 
         // Then
-        assertThat(actual.getTotalElements()).isEqualTo(2);
-        assertThat(actual.getContent()).hasSize(2);
-        assertThat(actual.getContent().get(0).getCategories()).isNotEmpty();
-        assertThat(actual.getContent().get(1).getCategories()).isNotEmpty();
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test
@@ -71,29 +69,30 @@ public class BookRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = ADD_SCRIPT_PATH, executionPhase = BEFORE_TEST_METHOD)
+    @Sql(scripts = DELETE_SCRIPT_PATH, executionPhase = AFTER_TEST_METHOD)
     @DisplayName("""
             findAll method with Specification should
             return a Page of Books according to Specification
             """)
     public void findAll_WithSpecification_ShouldReturnPageOfBooks() {
         // Given
-        createAndSaveBooks(createAndSaveCategories());
+        List<Book> expected = List.of(TestDataHelper.createBooks().get(0));
 
         Specification<Book> spec = (root, query, cb)
-                -> cb.equal(root.get("isbn"), "000-0000000000");
+                -> cb.equal(root.get("isbn"), "978-0134685991");
         Pageable pageable = PageRequest.of(0, 10);
 
         // When
-        Page<Book> actual = bookRepository.findAll(spec, pageable);
+        List<Book> actual = bookRepository.findAll(spec, pageable).getContent();
 
         // Then
-        assertThat(actual.getTotalElements()).isEqualTo(1);
-        assertThat(actual.getContent()).hasSize(1);
-        assertThat(actual.getContent().get(0).getCategories()).isNotEmpty();
-        assertThat(actual.getContent().get(0).getIsbn()).isEqualTo("000-0000000000");
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
+    @Sql(scripts = ADD_SCRIPT_PATH, executionPhase = BEFORE_TEST_METHOD)
+    @Sql(scripts = DELETE_SCRIPT_PATH, executionPhase = AFTER_TEST_METHOD)
     @DisplayName("""
             findById method with id of existing Book
             should return non-empty Optional of Book
@@ -101,22 +100,15 @@ public class BookRepositoryTest {
             """)
     public void findById_WithValidId_ShouldReturnOptionalOfBook() {
         // Given
-        List<Category> categories = createAndSaveCategories();
-        Book book1 = createBook("999-9999999999", Set.of(categories.get(0)));
-        Book book2 = createBook("000-0000000000", Set.of(categories.get(1)));
-        bookRepository.save(book1);
-        bookRepository.save(book2);
-
-        Long requestedId = book1.getId();
+        Book expected = TestDataHelper.createBooks().get(0);
+        Long id = expected.getId();
 
         // When
-        Optional<Book> actual = bookRepository.findById(requestedId);
+        Optional<Book> actual = bookRepository.findById(id);
 
         // Then
         assertThat(actual).isPresent();
-        assertThat(actual.get().getId()).isEqualTo(requestedId);
-        assertThat(actual.get().getIsbn()).isEqualTo(book1.getIsbn());
-        assertThat(actual.get().getCategories()).isNotEmpty();
+        assertThat(actual).get().isEqualTo(expected);
     }
 
     @Test
@@ -136,6 +128,8 @@ public class BookRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = ADD_SCRIPT_PATH, executionPhase = BEFORE_TEST_METHOD)
+    @Sql(scripts = DELETE_SCRIPT_PATH, executionPhase = AFTER_TEST_METHOD)
     @DisplayName("""
             findAllByCategoryId method with id of existing
             Category should return a Page of Books found
@@ -143,21 +137,22 @@ public class BookRepositoryTest {
             """)
     public void findAllByCategoryId_WithValidId_ShouldReturnPageOfBooks() {
         // Given
-        List<Category> categories = createAndSaveCategories();
-        List<Book> books = createAndSaveBooks(categories);
+        Category category = TestDataHelper.createCategories().get(0);
+        Long categoryId = category.getId();
 
-        Long categoryId = categories.get(0).getId();
+        List<Book> books = TestDataHelper.createBooks();
+        List<Book> expected = List.of(
+                books.get(0),
+                books.get(1)
+        );
 
         Pageable pageable = PageRequest.of(0, 10);
 
         // When
-        Page<Book> actual = bookRepository.findAllByCategoryId(categoryId, pageable);
+        List<Book> actual = bookRepository.findAllByCategoryId(categoryId, pageable).getContent();
 
         // Then
-        assertThat(actual.getTotalElements()).isEqualTo(1);
-        assertThat(actual.getContent()).hasSize(1);
-        assertThat(actual.getContent().get(0).getCategories())
-                .containsOnly(categories.get(0));
+        assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }
 
     @Test
@@ -176,34 +171,5 @@ public class BookRepositoryTest {
         // Then
         assertThat(actual.getTotalElements()).isZero();
         assertThat(actual.getContent()).isEmpty();
-    }
-
-
-
-    private Book createBook(String isbn, Set<Category> categories) {
-        return new Book()
-                .setTitle("Test title")
-                .setAuthor("Test author")
-                .setIsbn(isbn)
-                .setPrice(BigDecimal.TEN)
-                .setCategories(categories);
-    }
-
-    private List<Category> createAndSaveCategories() {
-        Category category1 = new Category().setName("Fantasy");
-        Category category2 = new Category().setName("Horror");
-        categoryRepository.save(category1);
-        categoryRepository.save(category2);
-
-        return List.of(category1, category2);
-    }
-
-    private List<Book> createAndSaveBooks(List<Category> categories) {
-        Book book1 = createBook("999-9999999999", Set.of(categories.get(0)));
-        Book book2 = createBook("000-0000000000", Set.of(categories.get(1)));
-        bookRepository.save(book1);
-        bookRepository.save(book2);
-
-        return List.of(book1, book2);
     }
 }
