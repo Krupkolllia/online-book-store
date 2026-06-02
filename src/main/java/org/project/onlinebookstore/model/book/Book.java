@@ -12,6 +12,7 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,6 +23,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode(of = "id")
 @Accessors(chain = true)
 @ToString(exclude = {"categories"})
 @SQLDelete(sql = "UPDATE books SET is_deleted = true WHERE id = ?")
