@@ -32,6 +32,10 @@ Finding and buying books online should be simple. This project is a backend REST
 
 ---
 
+## 🎬 Demo
+
+[▶ Watch the demo](https://www.loom.com/share/89c9609b465c4cedb15efb7858fec705)
+
 ## 🛠 Tech Stack
 
 | Layer | Technology                       |
@@ -186,9 +190,7 @@ The easiest way to run the full application (app + database):
 docker-compose up --build
 ```
 
-The API will be available at: `http://localhost:8080`
-
-Swagger UI: `http://localhost:8080/swagger-ui/index.html`
+The API will be available at: `http://localhost:8080/swagger-ui/index.html`
 
 To stop:
 ```bash
