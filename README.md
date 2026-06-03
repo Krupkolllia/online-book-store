@@ -93,6 +93,71 @@ Finding and buying books online should be simple. This project is a backend REST
 
 ---
 
+```mermaid
+erDiagram
+    users {
+        BIGINT id PK
+        VARCHAR email
+        VARCHAR password
+        VARCHAR first_name
+        VARCHAR last_name
+        TEXT shipping_address
+    }
+    roles {
+        BIGINT id PK
+        VARCHAR name
+    }
+    books {
+        BIGINT id PK
+        VARCHAR title
+        VARCHAR author
+        VARCHAR isbn
+        DECIMAL price
+        TEXT description
+        TEXT cover_image
+    }
+    categories {
+        BIGINT id PK
+        VARCHAR name
+        TEXT description
+    }
+    shopping_carts {
+        BIGINT user_id FK
+    }
+    cart_items {
+        BIGINT id PK
+        BIGINT shopping_cart_id FK
+        BIGINT book_id FK
+        INT quantity
+    }
+    orders {
+        BIGINT id PK
+        BIGINT user_id FK
+        VARCHAR status
+        DECIMAL total
+        DATETIME order_date
+        TEXT shipping_address
+    }
+    order_items {
+        BIGINT id PK
+        BIGINT order_id FK
+        BIGINT book_id FK
+        INT quantity
+        DECIMAL price
+    }
+
+    users }o--o{ roles : "has"
+    users ||--|| shopping_carts : "owns"
+    shopping_carts ||--o{ cart_items : "contains"
+    cart_items }o--|| books : "references"
+    books }o--o{ categories : "belongs to"
+    users ||--o{ orders : "places"
+    orders ||--o{ order_items : "includes"
+    order_items }o--|| books : "references"
+```
+
+---
+
 ## 🔌 API Endpoints
 
 ### 🔐 Authentication (`/api/auth`)
