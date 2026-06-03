@@ -21,6 +21,7 @@ public interface BookMapper {
     @Mapping(target = "categoryIds", expression = "java(mapCategoryIds(book))")
     BookResponseDto toDto(Book book);
 
+    @Mapping(target = "categories", source = "categoriesId", qualifiedByName = "categoryFromId")
     Book toModel(CreateBookRequestDto dto);
 
     BookResponseDtoWithoutCategoryIds toDtoWithoutCategories(Book book);
@@ -36,6 +37,13 @@ public interface BookMapper {
                 .stream()
                 .map(Category::getId)
                 .collect(Collectors.toSet());
+    }
+
+    @Named("categoryFromId")
+    default Category categoryFromId(Long id) {
+        Category category = new Category();
+        category.setId(id);
+        return category;
     }
 
     @Named("bookFromId")

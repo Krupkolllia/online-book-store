@@ -10,8 +10,7 @@ import org.mapstruct.ReportingPolicy;
         componentModel = MappingConstants.ComponentModel.SPRING,
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
-        implementationPackage = "<PACKAGE_NAME>.impl"
+        nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
 )
 public interface MapStructConfig {
 }
