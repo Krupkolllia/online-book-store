@@ -15,3 +15,14 @@ VALUES (1, 1),
        (2, 3),
        (3, 2),
        (3, 3);
+
+INSERT INTO users (id, email, password, first_name, last_name)
+VALUES (987, 'test@mail.com', 'test', 'test', 'test');
+
+INSERT INTO shopping_carts (user_id)
+VALUES (987);
+
+INSERT INTO cart_items (id, shopping_cart_id, book_id, quantity)
+VALUES (10, 987, 1, 2),
+       (11, 987, 2, 1),
+       (12, 987, 3, 3);
