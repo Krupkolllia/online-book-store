@@ -18,14 +18,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.project.onlinebookstore.util.TestDataHelper.ADD_SCRIPT_PATH;
+import static org.project.onlinebookstore.util.TestDataHelper.DELETE_SCRIPT_PATH;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class BookRepositoryTest {
-    protected static final String ADD_SCRIPT_PATH = "classpath:database/add-test-data.sql";
-    protected static final String DELETE_SCRIPT_PATH = "classpath:database/delete-test-data.sql";
 
     @Autowired
     private BookRepository bookRepository;

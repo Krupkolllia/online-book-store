@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 public class TestDataHelper {
+    public static final String ADD_SCRIPT_PATH = "classpath:database/add-test-data.sql";
+    public static final String DELETE_SCRIPT_PATH = "classpath:database/delete-test-data.sql";
 
     public static List<BookResponseDto> createBookResponseDtoList() {
         List<BookResponseDto> responseDtoList = new ArrayList<>();
