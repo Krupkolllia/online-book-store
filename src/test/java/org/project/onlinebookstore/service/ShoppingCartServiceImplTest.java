@@ -39,11 +39,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.project.onlinebookstore.util.TestDataHelper.USER_ID;
 
 @ExtendWith(MockitoExtension.class)
 public class ShoppingCartServiceImplTest {
-
-    private static final Long USER_ID = 322L;
 
     @Mock
     private ShoppingCartRepository shoppingCartRepository;

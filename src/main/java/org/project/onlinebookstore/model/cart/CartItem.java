@@ -10,11 +10,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.project.onlinebookstore.model.book.Book;
 
 @Entity
 @Getter
 @Setter
+@Accessors(chain = true)
 @Table(name = "cart_items")
 public class CartItem {
     @Id
