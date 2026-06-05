@@ -46,6 +46,8 @@ public class ShoppingCartRepositoryTest {
     }
 
     @Test
+    @Sql(scripts = ADD_SCRIPT_PATH, executionPhase = BEFORE_TEST_METHOD)
+    @Sql(scripts = DELETE_SCRIPT_PATH, executionPhase = AFTER_TEST_METHOD)
     @DisplayName("""
             findById method with id of non-existing ShoppingCart
             should return empty Optional of ShoppingCart
