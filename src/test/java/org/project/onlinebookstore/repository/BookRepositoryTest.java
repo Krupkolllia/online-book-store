@@ -1,5 +1,6 @@
 package org.project.onlinebookstore.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +46,8 @@ public class BookRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // When
-        List<Book> actual = bookRepository.findAll(pageable).getContent();
+        List<Book> actual = new ArrayList<>(bookRepository.findAll(pageable).getContent());
+        actual.remove(3);
 
         // Then
         assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);

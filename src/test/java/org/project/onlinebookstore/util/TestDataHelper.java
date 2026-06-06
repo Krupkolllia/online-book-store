@@ -2,6 +2,8 @@ package org.project.onlinebookstore.util;
 
 import org.project.onlinebookstore.dto.book.BookResponseDto;
 import org.project.onlinebookstore.dto.book.BookResponseDtoWithoutCategoryIds;
+import org.project.onlinebookstore.dto.cart.CartItemResponseDto;
+import org.project.onlinebookstore.dto.cart.ShoppingCartResponseDto;
 import org.project.onlinebookstore.dto.category.CategoryResponseDto;
 import org.project.onlinebookstore.model.book.Book;
 import org.project.onlinebookstore.model.book.Category;
@@ -101,7 +103,7 @@ public class TestDataHelper {
         return List.of(book1, book2, book3);
     }
 
-    public static User createUser() {
+    public static User createTestUser() {
         Role role = new Role();
         role.setId(882L);
         role.setName(RoleName.ROLE_USER);
@@ -109,7 +111,7 @@ public class TestDataHelper {
         return new User()
                 .setId(USER_ID)
                 .setRoles(Set.of(role))
-                .setEmail("test@mail.com")
+                .setEmail("test_user@mail.com")
                 .setPassword("test")
                 .setFirstName("test")
                 .setLastName("test")
@@ -130,9 +132,25 @@ public class TestDataHelper {
     public static ShoppingCart createShoppingCart() {
         ShoppingCart shoppingCart = new ShoppingCart()
                 .setId(USER_ID)
-                .setUser(createUser());
+                .setUser(createTestUser());
 
         shoppingCart.setCartItems(createCartItems(shoppingCart));
         return shoppingCart;
+    }
+
+    public static List<CartItemResponseDto> createCartItemResponseDtoList() {
+        List<CartItemResponseDto> items = new ArrayList<>();
+
+        items.add(new CartItemResponseDto(10L, 1L, "Test title 1", 2));
+        items.add(new CartItemResponseDto(11L, 2L, "Test title 2", 1));
+        items.add(new CartItemResponseDto(12L, 3L, "Test title 3", 3));
+
+        return items;
+    }
+
+    public static ShoppingCartResponseDto createShoppingCartResponseDto() {
+        return new ShoppingCartResponseDto(
+                USER_ID, USER_ID, createCartItemResponseDtoList()
+        );
     }
 }

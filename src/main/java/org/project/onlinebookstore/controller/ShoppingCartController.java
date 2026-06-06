@@ -30,6 +30,7 @@ public class ShoppingCartController {
 
     @Operation(summary = "Add an item to shopping cart")
     @PreAuthorize("hasRole('USER')")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ShoppingCartResponseDto addItemToCart(@RequestBody @Valid CartItemRequestDto item) {
         return shoppingCartService.addItemToCart(item);

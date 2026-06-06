@@ -8,6 +8,7 @@ import org.project.onlinebookstore.model.cart.ShoppingCart;
 
 @Mapper(config = MapStructConfig.class, uses = CartItemMapper.class)
 public interface ShoppingCartMapper {
+    @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "cartItems", qualifiedByName = "modelsToResponsesDto")
     ShoppingCartResponseDto toDto(ShoppingCart shoppingCart);
 }
