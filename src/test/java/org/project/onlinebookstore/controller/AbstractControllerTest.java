@@ -12,9 +12,6 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractControllerTest {
-    protected static final String ADD_SCRIPT_PATH = "classpath:database/add-test-data.sql";
-    protected static final String DELETE_SCRIPT_PATH = "classpath:database/delete-test-data.sql";
-
     protected static MockMvc mockMvc;
 
     @Autowired

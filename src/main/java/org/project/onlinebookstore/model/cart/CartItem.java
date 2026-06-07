@@ -8,13 +8,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.project.onlinebookstore.model.book.Book;
 
 @Entity
 @Getter
 @Setter
+@Accessors(chain = true)
+@EqualsAndHashCode(of = "id")
 @Table(name = "cart_items")
 public class CartItem {
     @Id

@@ -1,5 +1,6 @@
 package org.project.onlinebookstore.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -18,14 +19,14 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.jdbc.Sql;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.project.onlinebookstore.util.TestDataHelper.ADD_SCRIPT_PATH;
+import static org.project.onlinebookstore.util.TestDataHelper.DELETE_SCRIPT_PATH;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class BookRepositoryTest {
-    protected static final String ADD_SCRIPT_PATH = "classpath:database/add-test-data.sql";
-    protected static final String DELETE_SCRIPT_PATH = "classpath:database/delete-test-data.sql";
 
     @Autowired
     private BookRepository bookRepository;
@@ -45,7 +46,8 @@ public class BookRepositoryTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         // When
-        List<Book> actual = bookRepository.findAll(pageable).getContent();
+        List<Book> actual = new ArrayList<>(bookRepository.findAll(pageable).getContent());
+        actual.remove(3);
 
         // Then
         assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);

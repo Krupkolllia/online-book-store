@@ -11,8 +11,10 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.project.onlinebookstore.model.user.User;
@@ -20,6 +22,8 @@ import org.project.onlinebookstore.model.user.User;
 @Entity
 @Getter
 @Setter
+@Accessors(chain = true)
+@EqualsAndHashCode(of = "id")
 @SQLDelete(sql = "UPDATE shopping_carts SET is_deleted = true WHERE user_id = ?")
 @SQLRestriction("is_deleted = false")
 @Table(name = "shopping_carts")

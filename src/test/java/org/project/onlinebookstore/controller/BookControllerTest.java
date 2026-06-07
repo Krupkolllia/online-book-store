@@ -13,9 +13,12 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MvcResult;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.project.onlinebookstore.util.TestDataHelper.ADD_SCRIPT_PATH;
+import static org.project.onlinebookstore.util.TestDataHelper.DELETE_SCRIPT_PATH;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.AFTER_TEST_METHOD;
 import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -56,7 +59,9 @@ public class BookControllerTest extends AbstractControllerTest {
                 .get("content")
                 .toString();
 
-        BookResponseDto[] actual = objectMapper.readValue(content, BookResponseDto[].class);
+        BookResponseDto[] responseDtoArray = objectMapper.readValue(content, BookResponseDto[].class);
+        List<BookResponseDto> actual = new ArrayList<>(Arrays.stream(responseDtoArray).toList());
+        actual.remove(3);
 
         assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
     }

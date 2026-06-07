@@ -2,16 +2,29 @@ package org.project.onlinebookstore.util;
 
 import org.project.onlinebookstore.dto.book.BookResponseDto;
 import org.project.onlinebookstore.dto.book.BookResponseDtoWithoutCategoryIds;
+import org.project.onlinebookstore.dto.cart.CartItemResponseDto;
+import org.project.onlinebookstore.dto.cart.ShoppingCartResponseDto;
 import org.project.onlinebookstore.dto.category.CategoryResponseDto;
 import org.project.onlinebookstore.model.book.Book;
 import org.project.onlinebookstore.model.book.Category;
+import org.project.onlinebookstore.model.cart.CartItem;
+import org.project.onlinebookstore.model.cart.ShoppingCart;
+import org.project.onlinebookstore.model.user.Role;
+import org.project.onlinebookstore.model.user.RoleName;
+import org.project.onlinebookstore.model.user.User;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class TestDataHelper {
+    public static final Long USER_ID = 987L;
+
+    public static final String ADD_SCRIPT_PATH = "classpath:database/add-test-data.sql";
+    public static final String DELETE_SCRIPT_PATH = "classpath:database/delete-test-data.sql";
 
     public static List<BookResponseDto> createBookResponseDtoList() {
         List<BookResponseDto> responseDtoList = new ArrayList<>();
@@ -88,5 +101,56 @@ public class TestDataHelper {
                 3L, "978-0131103627", Set.of(categories.get(1), categories.get(2)));
 
         return List.of(book1, book2, book3);
+    }
+
+    public static User createTestUser() {
+        Role role = new Role();
+        role.setId(882L);
+        role.setName(RoleName.ROLE_USER);
+
+        return new User()
+                .setId(USER_ID)
+                .setRoles(Set.of(role))
+                .setEmail("test_user@mail.com")
+                .setPassword("test")
+                .setFirstName("test")
+                .setLastName("test")
+                .setDeleted(false);
+    }
+
+    public static Set<CartItem> createCartItems(ShoppingCart shoppingCart) {
+        Set<CartItem> items = new HashSet<>();
+        List<Book> books = createBooks();
+
+        items.add(new CartItem().setId(10L).setShoppingCart(shoppingCart).setBook(books.get(0)).setQuantity(2));
+        items.add(new CartItem().setId(11L).setShoppingCart(shoppingCart).setBook(books.get(1)).setQuantity(1));
+        items.add(new CartItem().setId(12L).setShoppingCart(shoppingCart).setBook(books.get(2)).setQuantity(3));
+
+        return items;
+    }
+
+    public static ShoppingCart createShoppingCart() {
+        ShoppingCart shoppingCart = new ShoppingCart()
+                .setId(USER_ID)
+                .setUser(createTestUser());
+
+        shoppingCart.setCartItems(createCartItems(shoppingCart));
+        return shoppingCart;
+    }
+
+    public static List<CartItemResponseDto> createCartItemResponseDtoList() {
+        List<CartItemResponseDto> items = new ArrayList<>();
+
+        items.add(new CartItemResponseDto(10L, 1L, "Test title 1", 2));
+        items.add(new CartItemResponseDto(11L, 2L, "Test title 2", 1));
+        items.add(new CartItemResponseDto(12L, 3L, "Test title 3", 3));
+
+        return items;
+    }
+
+    public static ShoppingCartResponseDto createShoppingCartResponseDto() {
+        return new ShoppingCartResponseDto(
+                USER_ID, USER_ID, createCartItemResponseDtoList()
+        );
     }
 }
